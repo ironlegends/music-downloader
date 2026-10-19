@@ -142,9 +142,9 @@ const createBrowserCore = ({
       downloadAdapter.clear();
       view?.setStatus?.(`Converting ${tracks.length} ${tracks.length === 1 ? 'track' : 'tracks'}. Keep this tab open.`);
       const results = await session.run(tracks);
-      const downloadResults = results.map((result, index) => ({
-        id: tracks[index]?.id,
-        ...result
+      const downloadResults = tracks.map((track, index) => ({
+        id: track.id,
+        ...(results[index] ?? { kind: 'terminal', status: 'not_started' })
       }));
       const ready = downloadAdapter.render(downloadResults);
       view?.setStage?.(ready > 0 ? 'download' : 'convert');

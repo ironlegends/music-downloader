@@ -68,7 +68,7 @@ const createDownloadAdapter = ({ documentRef, windowRef, exposeLegacyGlobals = f
         successful.push(item);
         rows.push({ item, position: index + 1, canceled: false });
       } else {
-        rows.push({ item: null, position: index + 1, canceled: result?.status === 'cancelled' });
+        rows.push({ item: null, position: index + 1, canceled: result?.status === 'cancelled', notStarted: result?.status === 'not_started' });
       }
     }
     items = successful;
@@ -87,7 +87,8 @@ const createDownloadAdapter = ({ documentRef, windowRef, exposeLegacyGlobals = f
       header.appendChild(title);
       const summary = documentRef.createElement('p');
       const canceled = rows.filter((row) => row.canceled).length;
-      summary.textContent = `${items.length} ready · ${rows.length - items.length - canceled} failed${canceled ? ` · ${canceled} canceled` : ''}`;
+      const notStarted = rows.filter((row) => row.notStarted).length;
+      summary.textContent = `${items.length} ready · ${rows.length - items.length - canceled - notStarted} failed${canceled ? ` · ${canceled} canceled` : ''}${notStarted ? ` · ${notStarted} not started` : ''}`;
       header.appendChild(summary);
       panel.appendChild(header);
       const list = documentRef.createElement('ol');
@@ -105,11 +106,12 @@ const createDownloadAdapter = ({ documentRef, windowRef, exposeLegacyGlobals = f
         name.textContent = `Track ${row.position}`;
         entry.appendChild(name);
         const status = documentRef.createElement('span');
-        status.className = `spotmate-result-state ${row.item ? 'spotmate-ready' : 'spotmate-failed'}`;
-        status.textContent = row.item ? 'Ready' : row.canceled ? 'Canceled' : 'Failed';
+        status.className = `spotmate-result-state ${row.item ? 'spotmate-ready' : row.notStarted ? 'spotmate-pending' : 'spotmate-failed'}`;
+        status.textContent = row.item ? 'Ready' : row.canceled ? 'Canceled' : row.notStarted ? 'Not started' : 'Failed';
         entry.appendChild(status);
         const detail = documentRef.createElement('p');
-        detail.textContent = row.item ? 'Conversion completed.' : row.canceled
+        detail.textContent = row.item ? 'Conversion completed.' : row.notStarted
+          ? 'Not started. Start conversions when you are ready.' : row.canceled
           ? 'Conversion canceled. Start conversions when you are ready.'
           : 'Conversion failed. Reload the link and start conversions to try again.';
         entry.appendChild(detail);

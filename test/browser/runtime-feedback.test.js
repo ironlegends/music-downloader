@@ -151,7 +151,7 @@ test('failed conversion explains recovery without exposing internal errors or cr
 test('canceling a conversion stops the request and permits a later user-started conversion', async () => {
   let canceled = false;
   let attempt = 0;
-  const env = environment({ inputs: [track], fetchImpl: (_url, { signal }) => ++attempt > 1 ? Promise.resolve(response()) : new Promise((_resolve, reject) => {
+  const env = environment({ inputs: [track, { ...track, name: 'two' }, { ...track, name: 'three' }], fetchImpl: (_url, { signal }) => ++attempt > 1 ? Promise.resolve(response()) : new Promise((_resolve, reject) => {
     signal.addEventListener('abort', () => {
       canceled = true;
       reject(Object.assign(new Error('aborted'), { name: 'AbortError' }));
@@ -164,10 +164,12 @@ test('canceling a conversion stops the request and permits a later user-started 
   assert.match(env.runtime.view.status, /conversion canceled.*start conversions/i);
   assert.equal(env.requests.length, 1);
   assert.equal(env.anchors.length, 0);
+  const canceledResults = env.documentRef.getElementById('spotmate-download-panel');
+  assert.match(allText(canceledResults), /Tracks \(3\).*1 canceled.*2 not started/);
   assert.equal(env.button('Start conversions').getAttribute('aria-disabled'), 'false');
   await env.button('Start conversions').dispatch();
-  assert.equal(env.requests.length, 2);
-  assert.match(env.runtime.view.status, /1 track is ready/i);
+  assert.equal(env.requests.length, 4);
+  assert.match(env.runtime.view.status, /3 of 3 tracks are ready/i);
 });
 
 test('partial conversion preserves successful downloads and explains the failed count', async () => {
