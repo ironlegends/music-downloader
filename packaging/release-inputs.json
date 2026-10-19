@@ -1,0 +1,12 @@
+{
+  "artifactPrefix": "music-converter",
+  "releaseVersionSource": "package.json",
+  "artifacts": [
+    "chrome-extension",
+    "console-script.js",
+    "LICENSE",
+    "SHA256SUMS",
+    "sbom.spdx.json",
+    "release-manifest.json"
+  ]
+}

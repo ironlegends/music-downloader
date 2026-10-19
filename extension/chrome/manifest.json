@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Music Converter",
+  "version": "2.0.0",
+  "description": "Run voluntary SpotMate playlist actions on the authorized page.",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://spotmate.online/en1",
+        "https://spotmate.online/en1/"
+      ],
+      "js": [
+        "content-script.js"
+      ],
+      "css": [
+        "assets/playlist-panel.css"
+      ],
+      "run_at": "document_idle",
+      "world": "ISOLATED"
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  }
+}

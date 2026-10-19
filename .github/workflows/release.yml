@@ -1,0 +1,121 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Annotated release tag, for example v2.0.0'
+        required: true
+        type: string
+      qa_confirmed:
+        description: 'Confirm completed Chrome QA on Windows and macOS'
+        required: true
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    name: Build and Draft Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      REQUESTED_TAG: ${{ inputs.tag }}
+      QA_CONFIRMED: ${{ inputs.qa_confirmed }}
+    steps:
+      - name: Checkout tag metadata
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Validate annotated release tag
+        id: validate_tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$QA_CONFIRMED" != "true" ]; then
+            echo "Error: QA must be confirmed."
+            exit 1
+          fi
+          if [[ ! "$REQUESTED_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "Error: Expected a release tag in vX.Y.Z format."
+            exit 1
+          fi
+          TAG_REF="refs/tags/$REQUESTED_TAG"
+          if [ "$(git cat-file -t "$TAG_REF")" != "tag" ]; then
+            echo "Error: Release tag must be annotated."
+            exit 1
+          fi
+          TAG_SHA=$(git rev-parse "$TAG_REF^{commit}")
+          if ! git merge-base --is-ancestor "$TAG_SHA" origin/main; then
+            echo "Error: Release tag must belong to main history."
+            exit 1
+          fi
+          echo "commit=$TAG_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout validated release commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ steps.validate_tag.outputs.commit }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          package-manager-cache: false
+
+      - name: Verify release version and QA evidence
+        env:
+          VALIDATED_COMMIT: ${{ steps.validate_tag.outputs.commit }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$VALIDATED_COMMIT"
+          VERSION="${REQUESTED_TAG#v}"
+          PKG_VERSION=$(node -e "console.log(require('./package.json').version)")
+          if [ "$VERSION" != "$PKG_VERSION" ]; then
+            echo "Error: Tag and package versions differ."
+            exit 1
+          fi
+          node tools/verify-release-qa.mjs "qa/${REQUESTED_TAG}-extension-checklist.md"
+          echo "VALIDATED_VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build release distribution
+        run: |
+          set -euo pipefail
+          TEMP_REL_DIR=$(mktemp -d)
+          echo "TEMP_REL_DIR=$TEMP_REL_DIR" >> "$GITHUB_ENV"
+          node tools/build-browser-artifacts.mjs --check
+          node tools/release/build.mjs --out-dir "$TEMP_REL_DIR"
+
+      - name: Verify release distribution
+        run: node tools/release/check-artifacts.mjs "$TEMP_REL_DIR" --version "$VALIDATED_VERSION"
+
+      - name: Create draft GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NOTES_FILE="docs/releases/${REQUESTED_TAG}.md"
+          if [ ! -f "$NOTES_FILE" ]; then
+            echo "Error: Release notes are missing."
+            exit 1
+          fi
+          gh release create "$REQUESTED_TAG" "$TEMP_REL_DIR"/* \
+            --title "Music Converter $REQUESTED_TAG" \
+            --notes-file "$NOTES_FILE" \
+            --draft
+
+      - name: Clean up temporary directories
+        if: always()
+        run: |
+          if [ -n "${TEMP_REL_DIR:-}" ] && [ -d "$TEMP_REL_DIR" ]; then
+            rm -rf -- "$TEMP_REL_DIR"
+          fi

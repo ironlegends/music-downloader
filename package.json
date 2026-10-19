@@ -1,0 +1,17 @@
+{
+  "name": "music-converter",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Client-side SpotMate playlist converter distributed as a Chrome extension and console script.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build:browser": "node tools/build-browser-artifacts.mjs --write",
+    "build:extension": "node tools/build-extension.mjs --browser chrome --out-dir dist",
+    "verify:extension": "node tools/verify-extension.mjs --browser chrome --out-dir dist",
+    "check:release": "node tools/check-release-metadata.mjs",
+    "release:build": "node tools/release/build.mjs",
+    "release:verify": "node tools/release/check-artifacts.mjs",
+    "test": "node --test --test-concurrency=1 test/**/*.test.js"
+  }
+}

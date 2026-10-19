@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Node ${{ matrix.node-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+        node-version:
+          - 22
+          - 24
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ matrix.node-version }}
+          package-manager-cache: false
+
+      - name: Test
+        run: npm test
+
+      - name: Build Browser Artifacts Check
+        run: node tools/build-browser-artifacts.mjs --check
+
+      - name: Build and Verify Chrome Extension
+        run: |
+          node -e "import fs from 'node:fs'; import os from 'node:os'; import path from 'node:path'; import { buildExtension } from './tools/build-extension.mjs'; import { verifyExtension } from './tools/verify-extension.mjs'; const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ext-ci-')); try { buildExtension({ browser: 'chrome', outDir: dir }); const v1 = verifyExtension({ browser: 'chrome', outDir: dir }); if (!v1.success) throw new Error('Chrome verify failed: ' + v1.errors.join(', ')); } finally { fs.rmSync(dir, { recursive: true, force: true }); }"
+
+      - name: Build and Verify Release
+        run: |
+          node -e "import fs from 'node:fs'; import os from 'node:os'; import path from 'node:path'; import { buildRelease } from './tools/release/build.mjs'; import { checkArtifacts } from './tools/release/check-artifacts.mjs'; const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'rel-ci-')); try { await buildRelease({ outputDir: dir }); const res = await checkArtifacts(dir); if (!res.success) { console.error(res.errors.join('\n')); process.exit(1); } } finally { fs.rmSync(dir, { recursive: true, force: true }); }"
+
+      - name: Check Git Diff
+        run: git diff --check
