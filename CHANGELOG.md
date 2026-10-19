@@ -11,6 +11,7 @@ Notable changes to Music Converter are recorded here. Version 2.0.0 is the publi
 - Documented Chrome on Windows and macOS, added macOS to the Node 22/24 CI matrix and recorded pending real-browser QA. Native Safari packaging is deferred.
 - Hardened release inputs, checked out the exact validated annotated tag and required independent QA evidence for each platform before draft release preparation.
 - Replaced tests that depended on sensitive historical Git objects with synthetic fixtures, allowing tests to run from an exported source snapshot.
+- Fixed CLI entry-point detection through linked directories, including macOS temporary paths, so build and release-validation commands execute correctly.
 
 ## [2.0.0] - 2026-08-27
 

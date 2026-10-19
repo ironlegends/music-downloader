@@ -1,5 +1,4 @@
 import fs from 'node:fs';
-import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export function validateReleaseQa(filePath) {
@@ -49,7 +48,7 @@ export function validateReleaseQa(filePath) {
   return true;
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && fs.existsSync(process.argv[1]) && fs.realpathSync(fileURLToPath(import.meta.url)) === fs.realpathSync(process.argv[1])) {
   try {
     validateReleaseQa(process.argv[2]);
     console.log('Release QA evidence passed');

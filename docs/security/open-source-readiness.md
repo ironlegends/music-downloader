@@ -66,9 +66,9 @@ References: [Apple Safari packaging](https://developer.apple.com/documentation/s
 
 ## Validation evidence
 
-Baseline on Windows with Node 24: 177/177 tests passed. The integrated English/Chrome-only source passes 185/185 tests, including packaging/license, synthetic Git provenance and hostile release-input regressions. Browser artifact and release metadata checks passed; actionlint v1.7.12 and YAML parsing passed both workflows. A synthetic interface fixture passed trusted-click/state checks in installed Windows Chrome 155 at 1280x800 and 390x844, with no console errors or horizontal overflow. Impeccable detector returned no findings for the changed UI targets. No real SpotMate download, macOS runtime or Safari validation is claimed.
+Baseline on Windows with Node 24: 177/177 tests passed. The integrated English/Chrome-only source passes 186/186 local tests, including packaging/license, synthetic Git provenance, hostile release-input and linked-directory CLI regressions. The first public macOS CI run exposed a CLI entry-point comparison that skipped execution through aliased temporary paths; the tools now compare canonical file paths. Browser artifact and release metadata checks passed; actionlint v1.7.12 and YAML parsing passed both workflows. Check the public CI results on the uploaded revision for the operating-system matrix. A synthetic interface fixture passed trusted-click/state checks in installed Windows Chrome 155 at 1280x800 and 390x844, with no console errors or horizontal overflow. Impeccable detector returned no findings for the changed UI targets. No real SpotMate download, macOS browser runtime or Safari validation is claimed.
 
-The exported source snapshot passed all 185 tests without the original Git history or any .git directory.
+The exported publication source snapshot passed all 186 tests without the original Git history or any .git directory.
 
 ## Remaining release gates
 
