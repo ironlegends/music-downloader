@@ -55,6 +55,8 @@ const createBrowserCore = ({
   if (typeof clearTimeoutImpl !== 'function') throw new TypeError('clearTimeoutImpl is required');
 
   let loadController = null;
+  let activeOperation = null;
+  let conversionCanceled = false;
   const supported = isAllowedSpotmatePage(windowRef.location);
   if (!supported) return undefined;
 
@@ -82,36 +84,81 @@ const createBrowserCore = ({
   const downloadAdapter = createDownloadAdapter({
     documentRef,
     windowRef,
+    guided: true,
     exposeLegacyGlobals: exposeDownloadGlobals
   });
 
   let view = null;
 
+  const explainInputError = (error) => {
+    switch (error?.message) {
+      case 'invalid-spotify-url':
+        return 'Paste a Spotify track or playlist link into the Spotify link field, then choose Load Spotify URL.';
+      case 'track-limit':
+        return 'This playlist has more than 100 tracks. Use a smaller playlist and load it again.';
+      case 'empty-track-value':
+        return 'A track could not be read. Reload the Spotify link on SpotMate, then try again.';
+      default:
+        return 'SpotMate could not load the tracks. Reload the page, complete any verification and try again.';
+    }
+  };
+
   const onLoad = async () => {
-    if (loadController) return;
+    if (activeOperation) return;
+    activeOperation = 'loading';
     loadController = new AbortControllerImpl();
     try {
-      view?.setStatus?.('');
+      downloadAdapter.clear();
+      view?.setActivity?.('loading');
+      view?.setStatus?.("Loading tracks. Complete the site's verification if asked, or cancel to try another link.");
       const input = documentRef.querySelector?.('#trackUrl');
-      pageAdapter.submitExistingSpotifyForm(input?.value);
-      await pageAdapter.waitForTrackInputs(loadController.signal);
+      const previousInputs = pageAdapter.submitExistingSpotifyForm(view?.getSourceUrl?.() ?? input?.value);
+      const tracks = await pageAdapter.waitForTrackInputs(loadController.signal, previousInputs);
+      view?.setStage?.('convert');
+      view?.setStatus?.(`${tracks.length} ${tracks.length === 1 ? 'track is' : 'tracks are'} loaded. Choose Start conversions.`);
     } catch (error) {
-      if (error?.name !== 'AbortError') throw error;
+      view?.setStatus?.(error?.name === 'AbortError'
+        ? 'Loading canceled. Paste another link and choose Load Spotify URL.'
+        : explainInputError(error));
     } finally {
       loadController = null;
+      activeOperation = null;
+      view?.setActivity?.('idle');
     }
   };
 
   const onStart = async () => {
+    if (activeOperation) return;
+    activeOperation = 'converting';
+    conversionCanceled = false;
     try {
-      view?.setStatus?.('');
+      view?.setActivity?.('converting');
       const tracks = pageAdapter.collectTrackInputs();
+      if (tracks.length === 0) {
+        view?.setStage?.('load');
+        view?.setStatus?.('No tracks found. Paste a Spotify link and choose Load Spotify URL first.');
+        return undefined;
+      }
+      downloadAdapter.clear();
+      view?.setStatus?.(`Converting ${tracks.length} ${tracks.length === 1 ? 'track' : 'tracks'}. Keep this tab open.`);
       const results = await session.run(tracks);
-      const downloadResults = results.map((result, index) => ({
-        id: tracks[index]?.id,
-        ...result
+      const downloadResults = tracks.map((track, index) => ({
+        id: track.id,
+        ...(results[index] ?? { kind: 'terminal', status: 'not_started' })
       }));
-      downloadAdapter.render(downloadResults);
+      const ready = downloadAdapter.render(downloadResults);
+      view?.setStage?.(ready > 0 ? 'download' : 'convert');
+      if (conversionCanceled) {
+        view?.setStatus?.(ready > 0
+          ? `Conversion canceled. ${ready} ${ready === 1 ? 'track is' : 'tracks are'} ready to download below.`
+          : 'Conversion canceled. Choose Start conversions when you are ready to try again.');
+      } else if (ready > 0) {
+        const failed = tracks.length - ready;
+        const summary = tracks.length === 1 ? '1 track is ready.' : `${ready} of ${tracks.length} tracks are ready.`;
+        view?.setStatus?.(`${summary} Choose a download below.${failed > 0 ? ` ${failed} could not be converted. Check the site's verification and try again if needed.` : ''}`);
+      } else {
+        view?.setStatus?.("SpotMate could not convert these tracks. Check the site's verification and try again.");
+      }
       return undefined;
     } catch (error) {
       const isKnownInputError = error?.message === 'empty-track-value' || error?.message === 'track-limit';
@@ -127,14 +174,22 @@ const createBrowserCore = ({
       });
       if (exposeConversionGlobals) pageAdapter.publishLegacyConversionResults([result]);
       downloadAdapter.render([]);
-      view?.setStatus?.(errorMessage);
+      view?.setStatus?.(isKnownInputError
+        ? explainInputError(error)
+        : "SpotMate could not convert these tracks. Reload the page, complete any verification and try again.");
       return undefined;
+    } finally {
+      activeOperation = null;
+      view?.setActivity?.('idle');
     }
   };
 
   const onCancel = () => {
+    if (!activeOperation) return;
+    conversionCanceled = activeOperation === 'converting';
     loadController?.abort();
     session.cancel();
+    view?.setStatus?.('Canceling. Wait for the current operation to stop.');
   };
 
   view = createPlaylistView({

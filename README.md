@@ -13,12 +13,13 @@ No terminal, Node.js or build step is needed. Keep the folder in place while the
 
 ## Download music
 
-1. Open [SpotMate](https://spotmate.online/en1) and paste a Spotify track or playlist link into the site's URL field.
+1. Open [SpotMate](https://spotmate.online/en1) and paste a Spotify track or playlist link into **Spotify link** in the Music Downloader panel.
 2. Complete the site's verification (Turnstile) manually if asked, then click **Load Spotify URL** in the extension panel.
 3. Wait for the track list, then click **Start conversions**.
-4. When conversion finishes, use each track's download button or **Download all**.
+4. When conversion finishes, use each ready track's **Download** button or **Download all ready**. Failed tracks include recovery instructions.
 
 Keep the SpotMate tab open while conversions run. Chrome may ask you to allow multiple downloads for this site.
+The panel shows what is happening and explains how to recover from errors. Use **Cancel** to stop loading or converting.
 
 ## Help
 

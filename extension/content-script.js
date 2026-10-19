@@ -10,7 +10,7 @@
     return __modules[id];
   }
 
-  const PANEL_CSS = "/**\n * Single source of truth for SpotMate v1.3 panel styles.\n */\n\n:root {\n  --spotmate-bg: #181818;\n  --spotmate-text: #ffffff;\n  --spotmate-subtext: #b3b3b3;\n  --spotmate-accent: #1db954;\n  --spotmate-accent-hover: #1ed760;\n  --spotmate-danger: #e22134;\n  --spotmate-border: #282828;\n  --spotmate-row-bg: #222222;\n  --spotmate-row-hover: #2a2a2a;\n  --spotmate-focus-ring: #ffffff;\n}\n\n.spotmate-voluntary-panel,\n.spotmate-download-panel {\n  display: flex;\n  flex-direction: column;\n  gap: 1rem;\n  margin: 1.5rem 0;\n  padding: 1rem;\n  background-color: var(--spotmate-bg);\n  color: var(--spotmate-text);\n  border-radius: 8px;\n  border: 1px solid var(--spotmate-border);\n  box-sizing: border-box;\n  width: 100%;\n  max-width: 100%;\n  overflow-x: hidden;\n  font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Oxygen-Sans, Ubuntu, Cantarell, \"Helvetica Neue\", sans-serif;\n}\n\n.spotmate-panel-toolbar {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: center;\n  gap: 0.75rem;\n}\n\n.spotmate-button,\n.spotmate-voluntary-panel button,\n.spotmate-download-panel button {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  min-height: 44px;\n  min-width: 44px;\n  padding: 0.5rem 1rem;\n  border-radius: 500px;\n  border: none;\n  font-size: 0.875rem;\n  font-weight: 700;\n  cursor: pointer;\n  background-color: var(--spotmate-accent);\n  color: #000000;\n  transition: transform 0.1s ease, background-color 0.1s ease;\n  box-sizing: border-box;\n  text-align: center;\n}\n\n.spotmate-button:hover:not(:disabled),\n.spotmate-voluntary-panel button:hover:not(:disabled),\n.spotmate-download-panel button:hover:not(:disabled) {\n  background-color: var(--spotmate-accent-hover);\n  transform: scale(1.02);\n}\n\n.spotmate-button:disabled,\n.spotmate-voluntary-panel button:disabled,\n.spotmate-download-panel button:disabled {\n  opacity: 0.5;\n  cursor: not-allowed;\n  transform: none;\n}\n\n.spotmate-button-cancel {\n  background-color: var(--spotmate-danger);\n  color: #ffffff;\n}\n\n.spotmate-button-cancel:hover:not(:disabled) {\n  background-color: #f13c4e;\n}\n\n.spotmate-button-select-all,\n.spotmate-button-select-none {\n  background-color: #333333;\n  color: var(--spotmate-text);\n  border: 1px solid #555555;\n}\n\n.spotmate-button-select-all:hover:not(:disabled),\n.spotmate-button-select-none:hover:not(:disabled) {\n  background-color: #444444;\n}\n\n.spotmate-button:focus-visible,\n.spotmate-voluntary-panel button:focus-visible,\n.spotmate-download-panel button:focus-visible,\n.spotmate-checkbox-container input[type=\"checkbox\"]:focus-visible {\n  outline: 2px solid var(--spotmate-focus-ring);\n  outline-offset: 2px;\n}\n\n.spotmate-track-list {\n  display: flex;\n  flex-direction: column;\n  gap: 0.5rem;\n  width: 100%;\n}\n\n/* Desktop layout (>= 768px) */\n.spotmate-track-row {\n  display: grid;\n  grid-template-columns: 44px minmax(120px, 2fr) minmax(100px, 1fr) minmax(120px, 1.5fr) auto;\n  align-items: center;\n  gap: 1rem;\n  padding: 0.5rem 0.75rem;\n  background-color: var(--spotmate-row-bg);\n  border-radius: 4px;\n  border: 1px solid var(--spotmate-border);\n  box-sizing: border-box;\n}\n\n.spotmate-track-row:hover {\n  background-color: var(--spotmate-row-hover);\n}\n\n.spotmate-checkbox-container {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  min-height: 44px;\n  min-width: 44px;\n  cursor: pointer;\n}\n\n.spotmate-checkbox-container input[type=\"checkbox\"] {\n  width: 20px;\n  height: 20px;\n  cursor: pointer;\n  accent-color: var(--spotmate-accent);\n}\n\n.spotmate-track-name {\n  font-size: 0.875rem;\n  font-weight: 500;\n  color: var(--spotmate-text);\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n.spotmate-track-status {\n  font-size: 0.8125rem;\n  color: var(--spotmate-subtext);\n}\n\n.spotmate-track-status[data-status=\"success\"] {\n  color: var(--spotmate-accent);\n  font-weight: 600;\n}\n\n.spotmate-track-status[data-status=\"failed\"] {\n  color: var(--spotmate-danger);\n  font-weight: 600;\n}\n\n.spotmate-track-row progress {\n  width: 100%;\n  height: 8px;\n  border-radius: 4px;\n  overflow: hidden;\n  appearance: none;\n  border: none;\n  background-color: #333333;\n}\n\n.spotmate-track-row progress::-webkit-progress-bar {\n  background-color: #333333;\n  border-radius: 4px;\n}\n\n.spotmate-track-row progress::-webkit-progress-value {\n  background-color: var(--spotmate-accent);\n  border-radius: 4px;\n}\n\n.spotmate-track-row progress::-moz-progress-bar {\n  background-color: var(--spotmate-accent);\n  border-radius: 4px;\n}\n\n.spotmate-live-region {\n  position: absolute;\n  width: 1px;\n  height: 1px;\n  padding: 0;\n  margin: -1px;\n  overflow: hidden;\n  clip: rect(0, 0, 0, 0);\n  white-space: nowrap;\n  border: 0;\n}\n\n/* Mobile responsive layout (< 768px) */\n@media (max-width: 767px) {\n  .spotmate-voluntary-panel,\n  .spotmate-download-panel {\n    padding: 0.75rem;\n    gap: 0.75rem;\n  }\n\n  .spotmate-panel-toolbar {\n    flex-direction: column;\n    align-items: stretch;\n  }\n\n  .spotmate-button,\n  .spotmate-voluntary-panel button,\n  .spotmate-download-panel button {\n    width: 100%;\n  }\n\n  .spotmate-track-row {\n    display: grid;\n    grid-template-columns: 44px 1fr;\n    grid-template-rows: auto auto auto;\n    gap: 0.5rem;\n    padding: 0.75rem;\n  }\n\n  .spotmate-checkbox-container {\n    grid-row: 1 / span 3;\n    grid-column: 1;\n    align-self: center;\n  }\n\n  .spotmate-track-name {\n    grid-column: 2;\n    grid-row: 1;\n  }\n\n  .spotmate-track-status {\n    grid-column: 2;\n    grid-row: 2;\n  }\n\n  .spotmate-track-row progress {\n    grid-column: 2;\n    grid-row: 3;\n  }\n\n  .spotmate-track-row .spotmate-button {\n    grid-column: 2;\n    margin-top: 0.5rem;\n  }\n}";
+  const PANEL_CSS = "/**\n * Single source of truth for SpotMate v1.3 panel styles.\n */\n\n.spotmate-voluntary-panel,\n.spotmate-download-panel {\n  --spotmate-bg: #ffffff;\n  --spotmate-text: #12213f;\n  --spotmate-subtext: #4b607f;\n  --spotmate-accent: #1269c7;\n  --spotmate-accent-hover: #0855a6;\n  --spotmate-danger: #9b3d12;\n  --spotmate-border: #dbe5f4;\n  --spotmate-row-bg: #ffffff;\n  --spotmate-row-hover: #f6f9ff;\n  --spotmate-focus-ring: #1269c7;\n  box-sizing: border-box;\n  width: 100%;\n  min-width: 0;\n  max-width: 100%;\n  margin: 24px 0;\n  padding: 0;\n  border: 1px solid var(--spotmate-border);\n  border-radius: 12px;\n  background: var(--spotmate-bg);\n  color: var(--spotmate-text);\n  color-scheme: light;\n  font: 400 16px/1.5 -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif;\n  overflow-wrap: anywhere;\n}\n\n.spotmate-voluntary-panel *,\n.spotmate-download-panel * { box-sizing: border-box; }\n.spotmate-product-header { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 20px 24px; border-radius: 11px 11px 0 0; background: #1269c7; color: #ffffff; }\n.spotmate-product-header h2 { margin: 0; color: inherit; font: 700 28px/1.2 -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif; }\n.spotmate-product-header span { font-size: 17px; }\n.spotmate-product-header a { margin-left: auto; color: #ffffff; text-underline-offset: 4px; }\n.spotmate-workspace { padding: 24px; }\n.spotmate-workspace label { display: block; margin-bottom: 8px; font-size: 18px; font-weight: 700; }\n#spotmate-source-url { display: block; width: 100%; min-width: 0; min-height: 50px; padding: 12px 16px; border: 1px solid #9aacc6; border-radius: 6px; background: #ffffff; color: #12213f; font: inherit; }\n#spotmate-source-url::placeholder { color: #52637b; opacity: 1; }\n.spotmate-help { margin: 8px 0 0; color: var(--spotmate-subtext); }\n.spotmate-help, .spotmate-status { max-width: 75ch; }\n.spotmate-verification { margin: 20px 0; padding: 16px; border-radius: 6px; background: #eaf2ff; color: #244a7e; }\n.spotmate-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; list-style: none; margin: 24px 0; padding: 0; }\n.spotmate-steps li { position: relative; display: flex; align-items: center; gap: 12px; min-width: 0; }\n.spotmate-step-number { display: grid; flex: 0 0 40px; width: 40px; height: 40px; place-items: center; border-radius: 50%; background: #e7edf6; color: #425b80; font-weight: 700; font-variant-numeric: tabular-nums; }\n.spotmate-steps li[aria-current=\"step\"] .spotmate-step-number { background: #1269c7; color: #ffffff; }\n.spotmate-steps strong { display: block; font-size: 15px; }\n.spotmate-steps div > span { display: block; margin-top: 2px; color: var(--spotmate-subtext); font-size: 14px; }\n.spotmate-steps li:not(:last-child)::after { position: absolute; content: \"\"; right: -20px; width: 16px; height: 2px; background: #cbd9ee; }\n.spotmate-panel-toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }\n\n.spotmate-button,\n.spotmate-voluntary-panel button,\n.spotmate-download-panel button {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  min-height: 44px;\n  min-width: 44px;\n  padding: 10px 20px;\n  border: 1px solid #1269c7;\n  border-radius: 6px;\n  background: #ffffff;\n  color: #0855a6;\n  font: 600 15px/1.4 -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif;\n  text-align: center;\n  cursor: pointer;\n  transition: background-color 120ms ease-out;\n}\n.spotmate-voluntary-panel button:hover:not(:disabled):not([aria-disabled=\"true\"]),\n.spotmate-download-panel button:hover:not(:disabled) { background: #eaf2ff; }\n.spotmate-voluntary-panel button[aria-disabled=\"true\"],\n.spotmate-voluntary-panel button:disabled,\n.spotmate-download-panel button:disabled { opacity: 0.55; cursor: not-allowed; }\n.spotmate-voluntary-panel button:focus-visible,\n.spotmate-download-panel button:focus-visible,\n.spotmate-product-header a:focus-visible,\n#spotmate-source-url:focus-visible,\n.spotmate-checkbox-container input:focus-visible { outline: 3px solid #1269c7; outline-offset: 3px; }\n.spotmate-product-header a:focus-visible { outline-color: #ffffff; }\n.spotmate-status { margin: 16px 0 0; }\n.spotmate-status:empty { margin: 0; }\n.spotmate-voluntary-panel ::selection,\n.spotmate-download-panel ::selection { background: #cee2ff; color: #12213f; }\n.spotmate-results-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 12px; padding: 20px 24px 12px; }\n.spotmate-results-heading h2 { margin: 0; color: inherit; font: 700 21px/1.3 -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif; }\n.spotmate-results-heading p { margin: 0; color: var(--spotmate-subtext); font-variant-numeric: tabular-nums; }\n.spotmate-results-list { list-style: none; margin: 0; padding: 0 24px; }\n.spotmate-result-row { display: grid; grid-template-columns: 24px minmax(90px, 1fr) minmax(80px, 0.8fr) minmax(160px, 2fr) auto; align-items: center; gap: 16px; min-height: 82px; padding: 16px 0; border-top: 1px solid #e3ebf6; }\n.spotmate-result-row strong { font-size: 17px; }\n.spotmate-result-row p { margin: 0; color: var(--spotmate-subtext); font-size: 14px; }\n.spotmate-result-number { color: #4b607f; font-variant-numeric: tabular-nums; }\n.spotmate-result-state { font-weight: 600; }\n.spotmate-ready { color: #167449; }\n.spotmate-failed { color: #945600; }\n.spotmate-download-footer { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; margin-top: 8px; padding: 20px 24px; border-radius: 0 0 11px 11px; background: #eaf2ff; }\n.spotmate-download-footer button { background: #1269c7; color: #ffffff; font-size: 16px; }\n.spotmate-download-footer button:hover:not(:disabled) { background: #0855a6; }\n.spotmate-download-footer p { margin: 0; color: #244a7e; }\n\n/* Desktop layout (>= 768px) */\n.spotmate-track-list { display: flex; flex-direction: column; gap: 8px; }\n.spotmate-track-row { display: grid; grid-template-columns: 44px minmax(120px, 2fr) minmax(100px, 1fr) minmax(120px, 1.5fr) auto; align-items: center; gap: 16px; padding: 12px; }\n.spotmate-checkbox-container { display: inline-flex; min-height: 44px; min-width: 44px; align-items: center; justify-content: center; }\n.spotmate-checkbox-container input { accent-color: #1269c7; }\n.spotmate-track-name { overflow-wrap: anywhere; }\n.spotmate-track-status { color: var(--spotmate-subtext); }\n.spotmate-track-row progress { width: 100%; accent-color: #1269c7; }\n.spotmate-live-region { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }\n\n/* Mobile responsive layout (< 768px) */\n@media (max-width: 767px) {\n  .spotmate-product-header { padding: 16px; gap: 8px 12px; }\n  .spotmate-product-header h2 { font-size: 22px; }\n  .spotmate-product-header span { font-size: 14px; }\n  .spotmate-workspace { padding: 16px; }\n  .spotmate-steps { grid-template-columns: 1fr; gap: 16px; margin: 20px 0; }\n  .spotmate-steps li:not(:last-child)::after { left: 19px; right: auto; bottom: -14px; width: 2px; height: 12px; }\n  .spotmate-panel-toolbar { flex-direction: column; align-items: stretch; }\n  .spotmate-panel-toolbar button { width: 100%; }\n  .spotmate-results-heading { padding: 16px; }\n  .spotmate-results-list { padding: 0 16px; }\n  .spotmate-result-row { grid-template-columns: 20px minmax(0, 1fr) auto; gap: 8px 12px; }\n  .spotmate-result-row p { grid-column: 2 / -1; }\n  .spotmate-result-row button { grid-column: 2 / -1; justify-self: start; }\n  .spotmate-download-footer { padding: 16px; gap: 12px; }\n  .spotmate-download-footer button { width: 100%; }\n  .spotmate-track-row { grid-template-columns: 44px minmax(0, 1fr); gap: 8px; }\n}\n@media (prefers-reduced-motion: reduce) {\n  .spotmate-voluntary-panel button, .spotmate-download-panel button { transition: none; }\n}";
 
   function __injectStyles(doc) {
     if (!doc || typeof doc.createElement !== 'function') return;
@@ -313,8 +313,10 @@
         const formElement = windowRef?.HTMLFormElement;
         const requestSubmit = formElement?.prototype?.requestSubmit;
         if (!input || !form || typeof requestSubmit !== 'function') fail('spotify-form-missing');
+        const previousInputs = Array.from(documentRef.querySelector?.('#tracks')?.querySelectorAll?.('input[type="hidden"]') || [], (node) => ({ node, value: node.value }));
         input.value = url;
         requestSubmit.call(form);
+        return previousInputs;
       };
 
       const publishLegacyConversionResults = (results) => {
@@ -322,15 +324,20 @@
         if (legacyEnabled) windowRef.fetchResults = results;
       };
 
-      const waitForTrackInputs = async (signal) => {
+      const waitForTrackInputs = async (signal, previousInputs) => {
         assertAllowed(windowRef);
         if (signal?.aborted) return Promise.reject(abortError());
-        const initial = collectTrackInputs();
+        const hasFreshInputs = () => {
+          if (!previousInputs) return true;
+          const current = Array.from(documentRef.querySelector?.('#tracks')?.querySelectorAll?.('input[type="hidden"]') || []);
+          return current.length !== previousInputs.length || current.some((node, index) => node !== previousInputs[index]?.node || node.value !== previousInputs[index]?.value);
+        };
+        const initial = hasFreshInputs() ? collectTrackInputs() : [];
         if (initial.length > 0) return Promise.resolve(initial);
 
         const MutationObserverImpl = windowRef?.MutationObserver;
         if (typeof MutationObserverImpl !== 'function') return Promise.reject(new Error('mutation-observer-missing'));
-        const container = documentRef?.querySelector?.('#tracks') || documentRef?.body;
+        const container = documentRef?.body || documentRef?.querySelector?.('#tracks');
         if (!container) return Promise.reject(new Error('tracks-container-missing'));
 
         return new Promise((resolve, reject) => {
@@ -349,6 +356,7 @@
           const onAbort = () => finish(reject, abortError());
           const onMutation = () => {
             try {
+              if (!hasFreshInputs()) return;
               const tracks = collectTrackInputs();
               if (tracks.length > 0) finish(resolve, tracks);
             } catch (error) {
@@ -357,7 +365,7 @@
           };
 
           observer = new MutationObserverImpl(onMutation);
-          observer.observe(container, { childList: true, subtree: true });
+          observer.observe(container, { childList: true, subtree: true, attributes: true, attributeFilter: ['value'] });
           signal?.addEventListener?.('abort', onAbort, { once: true });
           if (signal?.aborted) onAbort();
         });
@@ -672,7 +680,7 @@
 
     const PANEL_ID = 'spotmate-download-panel';
 
-    const createDownloadAdapter = ({ documentRef, windowRef, exposeLegacyGlobals = false } = {}) => {
+    const createDownloadAdapter = ({ documentRef, windowRef, exposeLegacyGlobals = false, guided = false } = {}) => {
       if (!documentRef || typeof documentRef.createElement !== 'function' || !documentRef.body) {
         throw new TypeError('documentRef is required');
       }
@@ -716,26 +724,106 @@
 
       const downloadAll = async (event) => {
         if (!isTrustedUserEvent(event)) return;
+        const batch = items.slice();
         if (exposeLegacyGlobals) windowRef.downloadUrls = items.map(({ url }) => url);
-        for (let index = 0; index < items.length; index += 1) {
+        for (let index = 0; index < batch.length; index += 1) {
           if (index > 0) await sleep(BROWSER_LIMITS.downloadGapMs);
-          trigger(items[index], event);
+          trigger(batch[index], event);
         }
       };
 
       const render = (results) => {
         clear();
         const successful = [];
+        const rows = [];
         for (const [index, result] of (Array.isArray(results) ? results : []).entries()) {
           const url = result?.url;
           if ((result?.kind === 'success' || result?.success === true) && isFinalHttpsUrl(url)) {
-            successful.push({
+            const item = {
               id: typeof result.id === 'string' && result.id.length > 0 ? result.id : `track-${index + 1}`,
               url
-            });
+            };
+            successful.push(item);
+            rows.push({ item, position: index + 1, canceled: false });
+          } else {
+            rows.push({ item: null, position: index + 1, canceled: result?.status === 'cancelled', notStarted: result?.status === 'not_started' });
           }
         }
         items = successful;
+        if (guided) {
+          if (rows.length === 0) return 0;
+          panel = documentRef.createElement('section');
+          panel.id = PANEL_ID;
+          panel.className = 'spotmate-download-panel spotmate-guided-results';
+          panel.setAttribute('lang', 'en');
+          panel.setAttribute('aria-labelledby', 'spotmate-results-title');
+          const header = documentRef.createElement('div');
+          header.className = 'spotmate-results-heading';
+          const title = documentRef.createElement('h2');
+          title.id = 'spotmate-results-title';
+          title.textContent = `Tracks (${rows.length})`;
+          header.appendChild(title);
+          const summary = documentRef.createElement('p');
+          const canceled = rows.filter((row) => row.canceled).length;
+          const notStarted = rows.filter((row) => row.notStarted).length;
+          summary.textContent = `${items.length} ready · ${rows.length - items.length - canceled - notStarted} failed${canceled ? ` · ${canceled} canceled` : ''}${notStarted ? ` · ${notStarted} not started` : ''}`;
+          header.appendChild(summary);
+          panel.appendChild(header);
+          const list = documentRef.createElement('ol');
+          list.className = 'spotmate-results-list';
+          list.setAttribute('role', 'list');
+          for (const row of rows) {
+            const entry = documentRef.createElement('li');
+            entry.className = 'spotmate-result-row';
+            const number = documentRef.createElement('span');
+            number.className = 'spotmate-result-number';
+            number.textContent = String(row.position);
+            number.setAttribute('aria-hidden', 'true');
+            entry.appendChild(number);
+            const name = documentRef.createElement('strong');
+            name.textContent = `Track ${row.position}`;
+            entry.appendChild(name);
+            const status = documentRef.createElement('span');
+            status.className = `spotmate-result-state ${row.item ? 'spotmate-ready' : row.notStarted ? 'spotmate-pending' : 'spotmate-failed'}`;
+            status.textContent = row.item ? 'Ready' : row.canceled ? 'Canceled' : row.notStarted ? 'Not started' : 'Failed';
+            entry.appendChild(status);
+            const detail = documentRef.createElement('p');
+            detail.textContent = row.item ? 'Conversion completed.' : row.notStarted
+              ? 'Not started. Start conversions when you are ready.' : row.canceled
+              ? 'Conversion canceled. Start conversions when you are ready.'
+              : 'Conversion failed. Reload the link and start conversions to try again.';
+            entry.appendChild(detail);
+            if (row.item) {
+              const button = documentRef.createElement('button');
+              button.type = 'button';
+              button.textContent = 'Download';
+              button.setAttribute('aria-label', `Download Track ${row.position}`);
+              button.addEventListener('click', (event) => downloadTrack(row.item, event));
+              entry.appendChild(button);
+            }
+            list.appendChild(entry);
+          }
+          panel.appendChild(list);
+          if (items.length > 0) {
+            const footer = documentRef.createElement('div');
+            footer.className = 'spotmate-download-footer';
+            const allButton = documentRef.createElement('button');
+            allButton.type = 'button';
+            allButton.textContent = 'Download all ready';
+            allButton.addEventListener('click', async (event) => {
+              if (!isTrustedUserEvent(event) || allButton.disabled) return;
+              allButton.disabled = true;
+              try { await downloadAll(event); } finally { allButton.disabled = false; }
+            });
+            footer.appendChild(allButton);
+            const detail = documentRef.createElement('p');
+            detail.textContent = `This will download the ${items.length} ready ${items.length === 1 ? 'track' : 'tracks'} from this batch.`;
+            footer.appendChild(detail);
+            panel.appendChild(footer);
+          }
+          documentRef.body.appendChild(panel);
+          return items.length;
+        }
         if (successful.length === 0) return 0;
 
         panel = documentRef.createElement('div');
@@ -1943,6 +2031,12 @@
       let panel = null;
       let downloadItems = [];
       let currentStatus = '';
+      let activity = 'idle';
+      let statusElement = null;
+      let activityButtons = [];
+      let sourceInput = null;
+      let currentStage = 'load';
+      let stageElements = [];
 
       const remove = () => {
         panel?.remove?.();
@@ -1954,47 +2048,158 @@
         return callback(value, event);
       };
 
-      const makeButton = (label, callback, value) => {
+      const makeButton = (label, callback, value, blocked = () => false) => {
         const button = documentRef.createElement('button');
         button.type = 'button';
         button.textContent = label;
-        button.addEventListener('click', (event) => invoke(callback, event, value));
+        button.className = label === LABELS.start ? 'spotmate-button' : 'spotmate-button spotmate-button-secondary';
+        button.addEventListener('click', (event) => {
+          if (!blocked()) return invoke(callback, event, value);
+          return undefined;
+        });
+        activityButtons.push({ button, blocked });
         return button;
+      };
+
+      const updateActivity = () => {
+        for (const { button, blocked } of activityButtons) {
+          button.setAttribute('aria-disabled', String(blocked()));
+        }
+        if (sourceInput) sourceInput.readOnly = activity !== 'idle';
+      };
+
+      const setStage = (stage) => {
+        currentStage = stage;
+        panel?.setAttribute('data-stage', stage);
+        for (const { element, name } of stageElements) {
+          element.setAttribute('aria-current', name === stage ? 'step' : 'false');
+        }
       };
 
       const render = () => {
         remove();
-        panel = documentRef.createElement('div');
+        panel = documentRef.createElement('section');
         panel.id = PANEL_ID;
         panel.className = 'spotmate-voluntary-panel';
-        panel.appendChild(makeButton(LABELS.load, onLoad));
-        panel.appendChild(makeButton(LABELS.start, onStart));
-        panel.appendChild(makeButton(LABELS.cancel, onCancel));
+        panel.setAttribute('lang', 'en');
+        panel.setAttribute('aria-labelledby', 'spotmate-product-title');
+        activityButtons = [];
 
-        const allButton = makeButton(LABELS.downloadAll, async (_value, event) => {
-          if (!isTrustedUserEvent(event) || typeof onDownloadAll !== 'function') return;
-          allButton.disabled = true;
-          try {
-            await onDownloadAll(event);
-          } finally {
-            allButton.disabled = false;
+        const header = documentRef.createElement('div');
+        header.className = 'spotmate-product-header';
+        const heading = documentRef.createElement('h2');
+        heading.id = 'spotmate-product-title';
+        heading.textContent = 'Music Downloader';
+        header.appendChild(heading);
+        const service = documentRef.createElement('span');
+        service.textContent = 'for SpotMate';
+        header.appendChild(service);
+        const help = documentRef.createElement('a');
+        help.href = 'https://github.com/ironlegends/music-downloader#download-music';
+        help.target = '_blank';
+        help.rel = 'noopener noreferrer';
+        help.textContent = 'Help';
+        header.appendChild(help);
+        panel.appendChild(header);
+
+        const workspace = documentRef.createElement('div');
+        workspace.className = 'spotmate-workspace';
+        const sourceLabel = documentRef.createElement('label');
+        sourceLabel.textContent = 'Spotify link';
+        sourceLabel.setAttribute('for', 'spotmate-source-url');
+        workspace.appendChild(sourceLabel);
+        const previousUrl = sourceInput?.value;
+        sourceInput = documentRef.createElement('input');
+        sourceInput.id = 'spotmate-source-url';
+        sourceInput.type = 'url';
+        sourceInput.value = previousUrl ?? documentRef.querySelector?.('#trackUrl')?.value ?? '';
+        sourceInput.placeholder = 'https://open.spotify.com/playlist/...';
+        sourceInput.setAttribute('autocomplete', 'off');
+        sourceInput.setAttribute('spellcheck', 'false');
+        sourceInput.setAttribute('aria-describedby', 'spotmate-link-help spotmate-verification-note');
+        sourceInput.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' && activity === 'idle' && isTrustedUserEvent(event)) {
+            event.preventDefault();
+            return invoke(onLoad, event);
           }
+          return undefined;
         });
-        panel.appendChild(allButton);
+        workspace.appendChild(sourceInput);
+        const instructions = documentRef.createElement('p');
+        instructions.id = 'spotmate-link-help';
+        instructions.className = 'spotmate-help';
+        instructions.textContent = 'Paste a Spotify track or playlist link.';
+        workspace.appendChild(instructions);
+        const verification = documentRef.createElement('p');
+        verification.id = 'spotmate-verification-note';
+        verification.className = 'spotmate-verification';
+        verification.textContent = 'Complete SpotMate verification manually if prompted.';
+        workspace.appendChild(verification);
+        const steps = documentRef.createElement('ol');
+        steps.className = 'spotmate-steps';
+        steps.setAttribute('role', 'list');
+        steps.setAttribute('aria-label', 'Download steps');
+        stageElements = [];
+        for (const [index, [name, title, detail]] of [
+          ['load', 'Load Spotify URL', 'Fetch tracks from the link'],
+          ['convert', 'Start conversions', 'Convert the loaded tracks'],
+          ['download', 'Download all ready', 'Get your converted tracks']
+        ].entries()) {
+          const step = documentRef.createElement('li');
+          const number = documentRef.createElement('span');
+          number.className = 'spotmate-step-number';
+          number.textContent = String(index + 1);
+          number.setAttribute('aria-hidden', 'true');
+          step.appendChild(number);
+          const copy = documentRef.createElement('div');
+          const label = documentRef.createElement('strong');
+          label.textContent = title;
+          copy.appendChild(label);
+          const hint = documentRef.createElement('span');
+          hint.textContent = detail;
+          copy.appendChild(hint);
+          step.appendChild(copy);
+          steps.appendChild(step);
+          stageElements.push({ element: step, name });
+        }
+        workspace.appendChild(steps);
+        const toolbar = documentRef.createElement('div');
+        toolbar.className = 'spotmate-panel-toolbar';
+        toolbar.appendChild(makeButton(LABELS.load, onLoad, undefined, () => activity !== 'idle'));
+        toolbar.appendChild(makeButton(LABELS.start, onStart, undefined, () => activity !== 'idle'));
+        toolbar.appendChild(makeButton(LABELS.cancel, onCancel, undefined, () => activity === 'idle'));
+        workspace.appendChild(toolbar);
+        panel.appendChild(workspace);
 
-        for (const item of downloadItems) {
-          const id = typeof item?.id === 'string' && item.id.length > 0 ? item.id : 'track';
-          panel.appendChild(makeButton(`Download ${id}`, onDownloadTrack, item));
+        if (downloadItems.length > 0) {
+          const allButton = makeButton(LABELS.downloadAll, async (_value, event) => {
+            if (!isTrustedUserEvent(event) || typeof onDownloadAll !== 'function') return;
+            allButton.disabled = true;
+            try {
+              await onDownloadAll(event);
+            } finally {
+              allButton.disabled = false;
+            }
+          });
+          panel.appendChild(allButton);
+
+          for (const item of downloadItems) {
+            const id = typeof item?.id === 'string' && item.id.length > 0 ? item.id : 'track';
+            panel.appendChild(makeButton(`Download ${id}`, onDownloadTrack, item));
+          }
         }
 
-        if (currentStatus) {
-          const statusElement = documentRef.createElement('span');
-          statusElement.className = 'spotmate-status';
-          statusElement.textContent = currentStatus;
-          panel.appendChild(statusElement);
-        }
+        statusElement = documentRef.createElement('p');
+        statusElement.id = 'spotmate-operation-status';
+        statusElement.className = 'spotmate-status';
+        statusElement.setAttribute('role', 'status');
+        statusElement.setAttribute('aria-atomic', 'true');
+        statusElement.textContent = currentStatus;
+        workspace.appendChild(statusElement);
 
         documentRef.body.appendChild(panel);
+        updateActivity();
+        setStage(currentStage);
         return panel;
       };
 
@@ -2005,12 +2210,21 @@
 
       const setStatus = (status) => {
         currentStatus = typeof status === 'string' ? status : '';
-        return render();
+        if (statusElement) statusElement.textContent = currentStatus;
+        return panel;
+      };
+
+      const setActivity = (nextActivity) => {
+        activity = nextActivity;
+        if (nextActivity === 'loading') setStage('load');
+        if (nextActivity === 'converting') setStage('convert');
+        updateActivity();
       };
 
       const mount = () => render();
 
-      const view = { mount, render, remove, setDownloadItems, setStatus };
+      const getSourceUrl = () => sourceInput?.value;
+      const view = { mount, render, remove, setDownloadItems, setStatus, setActivity, setStage, getSourceUrl };
       Object.defineProperty(view, 'panel', { enumerable: true, get: () => panel });
       Object.defineProperty(view, 'status', { enumerable: true, get: () => currentStatus });
       return Object.freeze(view);
@@ -2050,6 +2264,8 @@
       if (typeof clearTimeoutImpl !== 'function') throw new TypeError('clearTimeoutImpl is required');
 
       let loadController = null;
+      let activeOperation = null;
+      let conversionCanceled = false;
       const supported = isAllowedSpotmatePage(windowRef.location);
       if (supported && documentRef) __injectStyles(documentRef);
       if (!supported) return undefined;
@@ -2078,36 +2294,81 @@
       const downloadAdapter = createDownloadAdapter({
         documentRef,
         windowRef,
+        guided: true,
         exposeLegacyGlobals: exposeDownloadGlobals
       });
 
       let view = null;
 
+      const explainInputError = (error) => {
+        switch (error?.message) {
+          case 'invalid-spotify-url':
+            return 'Paste a Spotify track or playlist link into the Spotify link field, then choose Load Spotify URL.';
+          case 'track-limit':
+            return 'This playlist has more than 100 tracks. Use a smaller playlist and load it again.';
+          case 'empty-track-value':
+            return 'A track could not be read. Reload the Spotify link on SpotMate, then try again.';
+          default:
+            return 'SpotMate could not load the tracks. Reload the page, complete any verification and try again.';
+        }
+      };
+
       const onLoad = async () => {
-        if (loadController) return;
+        if (activeOperation) return;
+        activeOperation = 'loading';
         loadController = new AbortControllerImpl();
         try {
-          view?.setStatus?.('');
+          downloadAdapter.clear();
+          view?.setActivity?.('loading');
+          view?.setStatus?.("Loading tracks. Complete the site's verification if asked, or cancel to try another link.");
           const input = documentRef.querySelector?.('#trackUrl');
-          pageAdapter.submitExistingSpotifyForm(input?.value);
-          await pageAdapter.waitForTrackInputs(loadController.signal);
+          const previousInputs = pageAdapter.submitExistingSpotifyForm(view?.getSourceUrl?.() ?? input?.value);
+          const tracks = await pageAdapter.waitForTrackInputs(loadController.signal, previousInputs);
+          view?.setStage?.('convert');
+          view?.setStatus?.(`${tracks.length} ${tracks.length === 1 ? 'track is' : 'tracks are'} loaded. Choose Start conversions.`);
         } catch (error) {
-          if (error?.name !== 'AbortError') throw error;
+          view?.setStatus?.(error?.name === 'AbortError'
+            ? 'Loading canceled. Paste another link and choose Load Spotify URL.'
+            : explainInputError(error));
         } finally {
           loadController = null;
+          activeOperation = null;
+          view?.setActivity?.('idle');
         }
       };
 
       const onStart = async () => {
+        if (activeOperation) return;
+        activeOperation = 'converting';
+        conversionCanceled = false;
         try {
-          view?.setStatus?.('');
+          view?.setActivity?.('converting');
           const tracks = pageAdapter.collectTrackInputs();
+          if (tracks.length === 0) {
+            view?.setStage?.('load');
+            view?.setStatus?.('No tracks found. Paste a Spotify link and choose Load Spotify URL first.');
+            return undefined;
+          }
+          downloadAdapter.clear();
+          view?.setStatus?.(`Converting ${tracks.length} ${tracks.length === 1 ? 'track' : 'tracks'}. Keep this tab open.`);
           const results = await session.run(tracks);
-          const downloadResults = results.map((result, index) => ({
-            id: tracks[index]?.id,
-            ...result
+          const downloadResults = tracks.map((track, index) => ({
+            id: track.id,
+            ...(results[index] ?? { kind: 'terminal', status: 'not_started' })
           }));
-          downloadAdapter.render(downloadResults);
+          const ready = downloadAdapter.render(downloadResults);
+          view?.setStage?.(ready > 0 ? 'download' : 'convert');
+          if (conversionCanceled) {
+            view?.setStatus?.(ready > 0
+              ? `Conversion canceled. ${ready} ${ready === 1 ? 'track is' : 'tracks are'} ready to download below.`
+              : 'Conversion canceled. Choose Start conversions when you are ready to try again.');
+          } else if (ready > 0) {
+            const failed = tracks.length - ready;
+            const summary = tracks.length === 1 ? '1 track is ready.' : `${ready} of ${tracks.length} tracks are ready.`;
+            view?.setStatus?.(`${summary} Choose a download below.${failed > 0 ? ` ${failed} could not be converted. Check the site's verification and try again if needed.` : ''}`);
+          } else {
+            view?.setStatus?.("SpotMate could not convert these tracks. Check the site's verification and try again.");
+          }
           return undefined;
         } catch (error) {
           const isKnownInputError = error?.message === 'empty-track-value' || error?.message === 'track-limit';
@@ -2123,14 +2384,22 @@
           });
           if (exposeConversionGlobals) pageAdapter.publishLegacyConversionResults([result]);
           downloadAdapter.render([]);
-          view?.setStatus?.(errorMessage);
+          view?.setStatus?.(isKnownInputError
+            ? explainInputError(error)
+            : "SpotMate could not convert these tracks. Reload the page, complete any verification and try again.");
           return undefined;
+        } finally {
+          activeOperation = null;
+          view?.setActivity?.('idle');
         }
       };
 
       const onCancel = () => {
+        if (!activeOperation) return;
+        conversionCanceled = activeOperation === 'converting';
         loadController?.abort();
         session.cancel();
+        view?.setStatus?.('Canceling. Wait for the current operation to stop.');
       };
 
       view = createPlaylistView({

@@ -164,3 +164,16 @@ test('waitForTrackInputs observes a mutation and cleans up on resolution or canc
   await assert.rejects(aborted, (error) => error.name === 'AbortError');
   assert.equal(abortedPage.observers[0].disconnected, true);
 });
+
+test('submitting another link waits for fresh track inputs instead of reusing the old list', async () => {
+  const page = makePage({ inputs: [input({ name: 'old', value: 'https://open.spotify.com/track/old' })] });
+  const adapter = createSpotmatePageAdapter(page);
+  const previous = adapter.submitExistingSpotifyForm('https://open.spotify.com/playlist/new');
+  const pending = adapter.waitForTrackInputs(new AbortController().signal, previous);
+  await Promise.resolve();
+  assert.equal(page.observers.length, 1, 'Existing tracks must not resolve the new load.');
+  page.tracks.inputs = [input({ name: 'new', value: 'https://open.spotify.com/track/new' })];
+  page.observers[0].callback();
+  assert.deepEqual(await pending, [{ id: 'new', value: 'https://open.spotify.com/track/new' }]);
+  assert.equal(page.observers[0].disconnected, true);
+});

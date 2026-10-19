@@ -487,6 +487,12 @@ const createPlaylistView = ({
   let panel = null;
   let downloadItems = [];
   let currentStatus = '';
+  let activity = 'idle';
+  let statusElement = null;
+  let activityButtons = [];
+  let sourceInput = null;
+  let currentStage = 'load';
+  let stageElements = [];
 
   const remove = () => {
     panel?.remove?.();
@@ -498,47 +504,158 @@ const createPlaylistView = ({
     return callback(value, event);
   };
 
-  const makeButton = (label, callback, value) => {
+  const makeButton = (label, callback, value, blocked = () => false) => {
     const button = documentRef.createElement('button');
     button.type = 'button';
     button.textContent = label;
-    button.addEventListener('click', (event) => invoke(callback, event, value));
+    button.className = label === LABELS.start ? 'spotmate-button' : 'spotmate-button spotmate-button-secondary';
+    button.addEventListener('click', (event) => {
+      if (!blocked()) return invoke(callback, event, value);
+      return undefined;
+    });
+    activityButtons.push({ button, blocked });
     return button;
+  };
+
+  const updateActivity = () => {
+    for (const { button, blocked } of activityButtons) {
+      button.setAttribute('aria-disabled', String(blocked()));
+    }
+    if (sourceInput) sourceInput.readOnly = activity !== 'idle';
+  };
+
+  const setStage = (stage) => {
+    currentStage = stage;
+    panel?.setAttribute('data-stage', stage);
+    for (const { element, name } of stageElements) {
+      element.setAttribute('aria-current', name === stage ? 'step' : 'false');
+    }
   };
 
   const render = () => {
     remove();
-    panel = documentRef.createElement('div');
+    panel = documentRef.createElement('section');
     panel.id = PANEL_ID;
     panel.className = 'spotmate-voluntary-panel';
-    panel.appendChild(makeButton(LABELS.load, onLoad));
-    panel.appendChild(makeButton(LABELS.start, onStart));
-    panel.appendChild(makeButton(LABELS.cancel, onCancel));
+    panel.setAttribute('lang', 'en');
+    panel.setAttribute('aria-labelledby', 'spotmate-product-title');
+    activityButtons = [];
 
-    const allButton = makeButton(LABELS.downloadAll, async (_value, event) => {
-      if (!isTrustedUserEvent(event) || typeof onDownloadAll !== 'function') return;
-      allButton.disabled = true;
-      try {
-        await onDownloadAll(event);
-      } finally {
-        allButton.disabled = false;
+    const header = documentRef.createElement('div');
+    header.className = 'spotmate-product-header';
+    const heading = documentRef.createElement('h2');
+    heading.id = 'spotmate-product-title';
+    heading.textContent = 'Music Downloader';
+    header.appendChild(heading);
+    const service = documentRef.createElement('span');
+    service.textContent = 'for SpotMate';
+    header.appendChild(service);
+    const help = documentRef.createElement('a');
+    help.href = 'https://github.com/ironlegends/music-downloader#download-music';
+    help.target = '_blank';
+    help.rel = 'noopener noreferrer';
+    help.textContent = 'Help';
+    header.appendChild(help);
+    panel.appendChild(header);
+
+    const workspace = documentRef.createElement('div');
+    workspace.className = 'spotmate-workspace';
+    const sourceLabel = documentRef.createElement('label');
+    sourceLabel.textContent = 'Spotify link';
+    sourceLabel.setAttribute('for', 'spotmate-source-url');
+    workspace.appendChild(sourceLabel);
+    const previousUrl = sourceInput?.value;
+    sourceInput = documentRef.createElement('input');
+    sourceInput.id = 'spotmate-source-url';
+    sourceInput.type = 'url';
+    sourceInput.value = previousUrl ?? documentRef.querySelector?.('#trackUrl')?.value ?? '';
+    sourceInput.placeholder = 'https://open.spotify.com/playlist/...';
+    sourceInput.setAttribute('autocomplete', 'off');
+    sourceInput.setAttribute('spellcheck', 'false');
+    sourceInput.setAttribute('aria-describedby', 'spotmate-link-help spotmate-verification-note');
+    sourceInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && activity === 'idle' && isTrustedUserEvent(event)) {
+        event.preventDefault();
+        return invoke(onLoad, event);
       }
+      return undefined;
     });
-    panel.appendChild(allButton);
+    workspace.appendChild(sourceInput);
+    const instructions = documentRef.createElement('p');
+    instructions.id = 'spotmate-link-help';
+    instructions.className = 'spotmate-help';
+    instructions.textContent = 'Paste a Spotify track or playlist link.';
+    workspace.appendChild(instructions);
+    const verification = documentRef.createElement('p');
+    verification.id = 'spotmate-verification-note';
+    verification.className = 'spotmate-verification';
+    verification.textContent = 'Complete SpotMate verification manually if prompted.';
+    workspace.appendChild(verification);
+    const steps = documentRef.createElement('ol');
+    steps.className = 'spotmate-steps';
+    steps.setAttribute('role', 'list');
+    steps.setAttribute('aria-label', 'Download steps');
+    stageElements = [];
+    for (const [index, [name, title, detail]] of [
+      ['load', 'Load Spotify URL', 'Fetch tracks from the link'],
+      ['convert', 'Start conversions', 'Convert the loaded tracks'],
+      ['download', 'Download all ready', 'Get your converted tracks']
+    ].entries()) {
+      const step = documentRef.createElement('li');
+      const number = documentRef.createElement('span');
+      number.className = 'spotmate-step-number';
+      number.textContent = String(index + 1);
+      number.setAttribute('aria-hidden', 'true');
+      step.appendChild(number);
+      const copy = documentRef.createElement('div');
+      const label = documentRef.createElement('strong');
+      label.textContent = title;
+      copy.appendChild(label);
+      const hint = documentRef.createElement('span');
+      hint.textContent = detail;
+      copy.appendChild(hint);
+      step.appendChild(copy);
+      steps.appendChild(step);
+      stageElements.push({ element: step, name });
+    }
+    workspace.appendChild(steps);
+    const toolbar = documentRef.createElement('div');
+    toolbar.className = 'spotmate-panel-toolbar';
+    toolbar.appendChild(makeButton(LABELS.load, onLoad, undefined, () => activity !== 'idle'));
+    toolbar.appendChild(makeButton(LABELS.start, onStart, undefined, () => activity !== 'idle'));
+    toolbar.appendChild(makeButton(LABELS.cancel, onCancel, undefined, () => activity === 'idle'));
+    workspace.appendChild(toolbar);
+    panel.appendChild(workspace);
 
-    for (const item of downloadItems) {
-      const id = typeof item?.id === 'string' && item.id.length > 0 ? item.id : 'track';
-      panel.appendChild(makeButton(`Download ${id}`, onDownloadTrack, item));
+    if (downloadItems.length > 0) {
+      const allButton = makeButton(LABELS.downloadAll, async (_value, event) => {
+        if (!isTrustedUserEvent(event) || typeof onDownloadAll !== 'function') return;
+        allButton.disabled = true;
+        try {
+          await onDownloadAll(event);
+        } finally {
+          allButton.disabled = false;
+        }
+      });
+      panel.appendChild(allButton);
+
+      for (const item of downloadItems) {
+        const id = typeof item?.id === 'string' && item.id.length > 0 ? item.id : 'track';
+        panel.appendChild(makeButton(`Download ${id}`, onDownloadTrack, item));
+      }
     }
 
-    if (currentStatus) {
-      const statusElement = documentRef.createElement('span');
-      statusElement.className = 'spotmate-status';
-      statusElement.textContent = currentStatus;
-      panel.appendChild(statusElement);
-    }
+    statusElement = documentRef.createElement('p');
+    statusElement.id = 'spotmate-operation-status';
+    statusElement.className = 'spotmate-status';
+    statusElement.setAttribute('role', 'status');
+    statusElement.setAttribute('aria-atomic', 'true');
+    statusElement.textContent = currentStatus;
+    workspace.appendChild(statusElement);
 
     documentRef.body.appendChild(panel);
+    updateActivity();
+    setStage(currentStage);
     return panel;
   };
 
@@ -549,12 +666,21 @@ const createPlaylistView = ({
 
   const setStatus = (status) => {
     currentStatus = typeof status === 'string' ? status : '';
-    return render();
+    if (statusElement) statusElement.textContent = currentStatus;
+    return panel;
+  };
+
+  const setActivity = (nextActivity) => {
+    activity = nextActivity;
+    if (nextActivity === 'loading') setStage('load');
+    if (nextActivity === 'converting') setStage('convert');
+    updateActivity();
   };
 
   const mount = () => render();
 
-  const view = { mount, render, remove, setDownloadItems, setStatus };
+  const getSourceUrl = () => sourceInput?.value;
+  const view = { mount, render, remove, setDownloadItems, setStatus, setActivity, setStage, getSourceUrl };
   Object.defineProperty(view, 'panel', { enumerable: true, get: () => panel });
   Object.defineProperty(view, 'status', { enumerable: true, get: () => currentStatus });
   return Object.freeze(view);

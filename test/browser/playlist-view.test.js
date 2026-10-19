@@ -56,8 +56,7 @@ test('the visible panel uses clear English action labels without showing the fin
   assert.deepEqual(labels, [
     'Load Spotify URL',
     'Start conversions',
-    'Cancel',
-    'Download all'
+    'Cancel'
   ]);
   assert.equal(labels.some((label) => label.includes('https://')), false);
 });
@@ -83,6 +82,8 @@ test('handlers ignore untrusted events and replace the stale panel', () => {
   buttons[0].dispatch('click', { isTrusted: true });
   buttons[1].dispatch('click', { isTrusted: true });
   buttons[2].dispatch('click', { isTrusted: true });
-  buttons[3].dispatch('click', { isTrusted: true });
-  assert.deepEqual(calls, ['load', 'start', 'cancel', 'all']);
+  assert.deepEqual(calls, ['load', 'start']);
+  view.setActivity('loading');
+  buttons[2].dispatch('click', { isTrusted: true });
+  assert.deepEqual(calls, ['load', 'start', 'cancel']);
 });

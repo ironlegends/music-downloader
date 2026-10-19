@@ -74,8 +74,10 @@ const createSpotmatePageAdapter = ({
     const formElement = windowRef?.HTMLFormElement;
     const requestSubmit = formElement?.prototype?.requestSubmit;
     if (!input || !form || typeof requestSubmit !== 'function') fail('spotify-form-missing');
+    const previousInputs = Array.from(documentRef.querySelector?.('#tracks')?.querySelectorAll?.('input[type="hidden"]') || [], (node) => ({ node, value: node.value }));
     input.value = url;
     requestSubmit.call(form);
+    return previousInputs;
   };
 
   const publishLegacyConversionResults = (results) => {
@@ -83,15 +85,20 @@ const createSpotmatePageAdapter = ({
     if (legacyEnabled) windowRef.fetchResults = results;
   };
 
-  const waitForTrackInputs = async (signal) => {
+  const waitForTrackInputs = async (signal, previousInputs) => {
     assertAllowed(windowRef);
     if (signal?.aborted) return Promise.reject(abortError());
-    const initial = collectTrackInputs();
+    const hasFreshInputs = () => {
+      if (!previousInputs) return true;
+      const current = Array.from(documentRef.querySelector?.('#tracks')?.querySelectorAll?.('input[type="hidden"]') || []);
+      return current.length !== previousInputs.length || current.some((node, index) => node !== previousInputs[index]?.node || node.value !== previousInputs[index]?.value);
+    };
+    const initial = hasFreshInputs() ? collectTrackInputs() : [];
     if (initial.length > 0) return Promise.resolve(initial);
 
     const MutationObserverImpl = windowRef?.MutationObserver;
     if (typeof MutationObserverImpl !== 'function') return Promise.reject(new Error('mutation-observer-missing'));
-    const container = documentRef?.querySelector?.('#tracks') || documentRef?.body;
+    const container = documentRef?.body || documentRef?.querySelector?.('#tracks');
     if (!container) return Promise.reject(new Error('tracks-container-missing'));
 
     return new Promise((resolve, reject) => {
@@ -110,6 +117,7 @@ const createSpotmatePageAdapter = ({
       const onAbort = () => finish(reject, abortError());
       const onMutation = () => {
         try {
+          if (!hasFreshInputs()) return;
           const tracks = collectTrackInputs();
           if (tracks.length > 0) finish(resolve, tracks);
         } catch (error) {
@@ -118,7 +126,7 @@ const createSpotmatePageAdapter = ({
       };
 
       observer = new MutationObserverImpl(onMutation);
-      observer.observe(container, { childList: true, subtree: true });
+      observer.observe(container, { childList: true, subtree: true, attributes: true, attributeFilter: ['value'] });
       signal?.addEventListener?.('abort', onAbort, { once: true });
       if (signal?.aborted) onAbort();
     });
