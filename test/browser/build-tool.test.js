@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import {
   generateArtifacts,
   generateBundle,
+  normalizeLF,
   checkBrowserArtifacts,
   buildBrowserArtifacts
 } from '../../tools/build-browser-artifacts.mjs';
@@ -26,6 +27,12 @@ test('build-tool: generateArtifacts creates the required bundles without changin
 test('build-tool: checkBrowserArtifacts validates generated files on disk', () => {
   const result = checkBrowserArtifacts({ rootDir });
   assert.equal(result, true);
+});
+
+test('build-tool: the loadable extension bundle stays synchronized with source and embedded styles', () => {
+  const actual = fs.readFileSync(path.join(rootDir, 'extension/content-script.js'), 'utf8');
+  const expected = generateBundle('extension/content-script.js', rootDir);
+  assert.ok(normalizeLF(actual) === normalizeLF(expected), 'Regenerate extension/content-script.js with npm run build:extension');
 });
 
 test('build-tool: buildBrowserArtifacts writes files to the target directory', () => {
