@@ -102,7 +102,7 @@ function generateHeader(artifactName, version) {
     return [
       '// ==UserScript==',
       '// @name         SpotMate Music Converter',
-      '// @namespace    https://github.com/ironlegends/music-converter-open-source',
+      '// @namespace    https://github.com/ironlegends/music-downloader',
       `// @version      ${version}`,
       '// @description  Voluntary sequential conversion helper for SpotMate',
       '// @match        https://spotmate.online/en1',

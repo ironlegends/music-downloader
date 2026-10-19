@@ -8,6 +8,19 @@ const manifestPaths = [
 ];
 
 describe('V2 Manifest Contract', () => {
+  it('ships a directly loadable extension folder with the canonical manifest and all declared files', () => {
+    const extensionRoot = new URL('../../extension/', import.meta.url);
+    const installManifest = JSON.parse(fs.readFileSync(new URL('manifest.json', extensionRoot), 'utf8'));
+    const canonicalManifest = JSON.parse(fs.readFileSync(new URL('chrome/manifest.json', extensionRoot), 'utf8'));
+    assert.deepStrictEqual(installManifest, canonicalManifest);
+    assertV2Manifest(installManifest, { browser: 'chrome' });
+    for (const contentScript of installManifest.content_scripts) {
+      for (const file of [...contentScript.js, ...contentScript.css]) {
+        assert.ok(fs.statSync(new URL(file, extensionRoot)).isFile(), `Missing installable file: ${file}`);
+      }
+    }
+  });
+
   it('validates the current Chrome manifest because it uses Manifest V3', () => {
     for (const manifestPath of manifestPaths) {
       const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));

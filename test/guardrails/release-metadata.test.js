@@ -49,8 +49,8 @@ function createTempRepo({
   const readme = [
     '# Music Converter',
     '',
-    '[![CI](https://github.com/ironlegends/music-converter-open-source/actions/workflows/ci.yml/badge.svg?branch=main&style=flat-square)](https://github.com/ironlegends/music-converter-open-source/actions/workflows/ci.yml?query=branch%3Amain)',
-    `[![Version ${readmeBadgeVersion}](https://img.shields.io/badge/version-${readmeBadgeVersion}-blue?style=flat-square)](https://github.com/ironlegends/music-converter-open-source/releases)`,
+    '[![CI](https://github.com/ironlegends/music-downloader/actions/workflows/ci.yml/badge.svg?branch=main&style=flat-square)](https://github.com/ironlegends/music-downloader/actions/workflows/ci.yml?query=branch%3Amain)',
+    `[![Version ${readmeBadgeVersion}](https://img.shields.io/badge/version-${readmeBadgeVersion}-blue?style=flat-square)](https://github.com/ironlegends/music-downloader/releases)`,
     '[![Node 22 | 24](https://img.shields.io/badge/node-22%20%7C%2024-339933?style=flat-square)](https://nodejs.org/)'
   ].join('\n') + '\n';
   fs.writeFileSync(path.join(tempDir, 'README.md'), readme, 'utf8');
@@ -60,7 +60,7 @@ function createTempRepo({
   const userscript = [
     '// ==UserScript==',
     '// @name         SpotMate Music Converter',
-    '// @namespace    https://github.com/ironlegends/music-converter-open-source',
+    '// @namespace    https://github.com/ironlegends/music-downloader',
     `// @version      ${userscriptVersion}`,
     '// @description  Voluntary sequential conversion helper for SpotMate',
     '// ==/UserScript==',

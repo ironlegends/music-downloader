@@ -2,7 +2,7 @@
   "name": "music-converter",
   "version": "2.0.0",
   "private": true,
-  "description": "Client-side SpotMate playlist converter distributed as a Chrome extension and console script.",
+  "description": "Convert Spotify links and download music through SpotMate.",
   "license": "MIT",
   "type": "module",
   "scripts": {

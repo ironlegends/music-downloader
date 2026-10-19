@@ -21,7 +21,7 @@ export function writeSbom({
     dataLicense: 'CC0-1.0',
     SPDXID: 'SPDXRef-DOCUMENT',
     name: `Music Converter v${version} SBOM`,
-    documentNamespace: `https://github.com/ironlegends/music-converter-open-source/releases/tag/v${version}#sbom`,
+    documentNamespace: `https://github.com/ironlegends/music-downloader/releases/tag/v${version}#sbom`,
     creationInfo: {
       creators: [`Tool: music-converter-write-sbom-${version}`],
       created: '1980-01-01T00:00:00Z'

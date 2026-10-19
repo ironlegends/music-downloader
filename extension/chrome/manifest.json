@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Music Converter",
+  "name": "Music Downloader",
   "version": "2.0.0",
-  "description": "Run voluntary SpotMate playlist actions on the authorized page.",
+  "description": "Convert Spotify links and download music through SpotMate.",
   "content_scripts": [
     {
       "matches": [

@@ -15,7 +15,7 @@ test('README displays exactly the three baseline flat-square badges', () => {
   const badgeLines = readme.split(/\r?\n/).filter((line) => line.includes('style=flat-square'));
 
   assert.equal(badgeLines.length, 3, 'README must display exactly three flat-square badges.');
-  assert.match(readme, /github\.com\/ironlegends\/music-converter-open-source\/actions\/workflows\/ci\.yml\/badge\.svg\?branch=main/);
+  assert.match(readme, /github\.com\/ironlegends\/music-downloader\/actions\/workflows\/ci\.yml\/badge\.svg\?branch=main/);
   const pkg = JSON.parse(readRepoFile('package.json'));
   const escapedVersion = pkg.version.replace(/\./g, '\\.');
   assert.match(readme, new RegExp(`version[-_ ]${escapedVersion}`, 'i'));

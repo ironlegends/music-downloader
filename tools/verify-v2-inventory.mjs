@@ -3,6 +3,7 @@ import path from 'node:path';
 
 export function scanV2Inventory({ rootDir }) {
   const allowlist = [
+    'extension/manifest.json',
     'extension/assets/playlist-panel.css',
     'extension/chrome/manifest.json',
     'extension/content-script.js',

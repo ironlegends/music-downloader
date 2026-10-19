@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping improve Music Converter. Keep contributions within the active product scope described in [Browser and platform support](docs/guides/browser-support.md).
+Thanks for helping improve Music Downloader. Keep contributions within the active product scope described in [Browser and platform support](docs/guides/browser-support.md).
 
 ## Before opening a change
 

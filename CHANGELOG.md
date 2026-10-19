@@ -1,8 +1,10 @@
 # Changelog
 
-Notable changes to Music Converter are recorded here. Version 2.0.0 is the published baseline; work after that release belongs under Unreleased until a release is made.
+Notable changes to Music Downloader are recorded here. Version 2.0.0 is the published baseline; work after that release belongs under Unreleased until a release is made.
 
 ## [Unreleased]
+
+- Renamed the public repository to music-downloader and simplified installation to loading the included extension folder, without Node.js or build commands.
 
 - Translated interface text, errors, comments, tests and documentation into English.
 - Renamed the active manual console helper to console-script.js and its source entry point to src/browser/entries/console-script.js.

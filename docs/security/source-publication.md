@@ -4,7 +4,7 @@ The maintainer authorized a new public repository and an update of the existing 
 
 ## Repository separation
 
-- Public source: https://github.com/ironlegends/music-converter-open-source
+- Public source: https://github.com/ironlegends/music-downloader
 - Legacy private development history: https://github.com/ironlegends/music-converter
 
 The public repository is initialized independently from the reviewed source files. It does not clone, fetch, share object storage with, or push refs from the private repository. Its initial history consists of one root commit. No legacy commits, tags, releases, issue bodies or raw audit assets are imported. The published source tree matches the updated private source tree.
