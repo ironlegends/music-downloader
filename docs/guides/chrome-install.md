@@ -11,7 +11,7 @@ Keep the extracted folder in a stable location. Chrome uses those files while th
 
 ## Start a download
 
-Paste a Spotify link into the site's URL field and complete the site's verification manually if asked. Click **Load Spotify URL** in the extension panel. Wait for the track list, then click **Start conversions**. Use a track's download button or **Download all** when conversion finishes.
+Paste a Spotify link into **Spotify link** in the Music Downloader panel and complete the site's verification manually if asked. Click **Load Spotify URL**. Wait for the track list, then click **Start conversions**. Use a ready track's **Download** button or **Download all ready** when conversion finishes. Failed tracks show recovery instructions.
 
 Keep the tab open during conversion. Chrome may ask you to allow multiple downloads for the site.
 

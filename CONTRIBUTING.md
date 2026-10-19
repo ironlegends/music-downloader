@@ -2,6 +2,8 @@
 
 Thanks for helping improve Music Downloader. Keep contributions within the active product scope described in [Browser and platform support](docs/guides/browser-support.md).
 
+See [distribution options](docs/guides/distribution.md) for Chrome Web Store preparation and the deferred Safari path.
+
 ## Before opening a change
 
 - Keep the Chrome extension limited to the supported SpotMate page.

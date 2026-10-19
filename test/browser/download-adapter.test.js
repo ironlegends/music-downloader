@@ -133,3 +133,18 @@ test('a trusted click downloads one item and bulk download waits 1500 ms', async
   // No additional anchor should be added.
   assert.equal(env.anchors.length, 3);
 });
+
+test('a started batch never substitutes results rendered by a later conversion', async () => {
+  const env = runtime();
+  env.adapter.render([
+    { id: 'one', kind: 'success', url: 'https://example.invalid/one.mp3' },
+    { id: 'two', kind: 'success', url: 'https://example.invalid/two.mp3' }
+  ]);
+  const pending = env.adapter.downloadAll({ isTrusted: true });
+  env.adapter.render([
+    { id: 'new-one', kind: 'success', url: 'https://example.invalid/new-one.mp3' },
+    { id: 'new-two', kind: 'success', url: 'https://example.invalid/new-two.mp3' }
+  ]);
+  await pending;
+  assert.deepEqual(env.anchors, ['https://example.invalid/one.mp3', 'https://example.invalid/two.mp3']);
+});

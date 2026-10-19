@@ -4,6 +4,8 @@ Notable changes to Music Downloader are recorded here. Version 2.0.0 is the publ
 
 ## [Unreleased]
 
+- Adopted the approved light blue guided design with a labeled source field, a three-stage workflow, complete result rows and a single primary download action. New links wait for fresh site results, and an in-progress download batch keeps its original items.
+- Added first-use guidance, visible loading and conversion states, actionable English errors and keyboard focus preservation to the active panel. Prevented overlapping load/conversion commands and removed the premature duplicate download control.
 - Renamed the public repository to music-downloader and simplified installation to loading the included extension folder, without Node.js or build commands.
 
 - Translated interface text, errors, comments, tests and documentation into English.

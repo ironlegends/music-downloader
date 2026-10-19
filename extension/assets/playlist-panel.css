@@ -2,43 +2,54 @@
  * Single source of truth for SpotMate v1.3 panel styles.
  */
 
-:root {
-  --spotmate-bg: #181818;
-  --spotmate-text: #ffffff;
-  --spotmate-subtext: #b3b3b3;
-  --spotmate-accent: #1db954;
-  --spotmate-accent-hover: #1ed760;
-  --spotmate-danger: #e22134;
-  --spotmate-border: #282828;
-  --spotmate-row-bg: #222222;
-  --spotmate-row-hover: #2a2a2a;
-  --spotmate-focus-ring: #ffffff;
-}
-
 .spotmate-voluntary-panel,
 .spotmate-download-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin: 1.5rem 0;
-  padding: 1rem;
-  background-color: var(--spotmate-bg);
-  color: var(--spotmate-text);
-  border-radius: 8px;
-  border: 1px solid var(--spotmate-border);
+  --spotmate-bg: #ffffff;
+  --spotmate-text: #12213f;
+  --spotmate-subtext: #4b607f;
+  --spotmate-accent: #1269c7;
+  --spotmate-accent-hover: #0855a6;
+  --spotmate-danger: #9b3d12;
+  --spotmate-border: #dbe5f4;
+  --spotmate-row-bg: #ffffff;
+  --spotmate-row-hover: #f6f9ff;
+  --spotmate-focus-ring: #1269c7;
   box-sizing: border-box;
   width: 100%;
+  min-width: 0;
   max-width: 100%;
-  overflow-x: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  margin: 24px 0;
+  padding: 0;
+  border: 1px solid var(--spotmate-border);
+  border-radius: 12px;
+  background: var(--spotmate-bg);
+  color: var(--spotmate-text);
+  color-scheme: light;
+  font: 400 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  overflow-wrap: anywhere;
 }
 
-.spotmate-panel-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem;
-}
+.spotmate-voluntary-panel *,
+.spotmate-download-panel * { box-sizing: border-box; }
+.spotmate-product-header { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 20px 24px; border-radius: 11px 11px 0 0; background: #1269c7; color: #ffffff; }
+.spotmate-product-header h2 { margin: 0; color: inherit; font: 700 28px/1.2 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.spotmate-product-header span { font-size: 17px; }
+.spotmate-product-header a { margin-left: auto; color: #ffffff; text-underline-offset: 4px; }
+.spotmate-workspace { padding: 24px; }
+.spotmate-workspace label { display: block; margin-bottom: 8px; font-size: 18px; font-weight: 700; }
+#spotmate-source-url { display: block; width: 100%; min-width: 0; min-height: 50px; padding: 12px 16px; border: 1px solid #9aacc6; border-radius: 6px; background: #ffffff; color: #12213f; font: inherit; }
+#spotmate-source-url::placeholder { color: #52637b; opacity: 1; }
+.spotmate-help { margin: 8px 0 0; color: var(--spotmate-subtext); }
+.spotmate-help, .spotmate-status { max-width: 75ch; }
+.spotmate-verification { margin: 20px 0; padding: 16px; border-radius: 6px; background: #eaf2ff; color: #244a7e; }
+.spotmate-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; list-style: none; margin: 24px 0; padding: 0; }
+.spotmate-steps li { position: relative; display: flex; align-items: center; gap: 12px; min-width: 0; }
+.spotmate-step-number { display: grid; flex: 0 0 40px; width: 40px; height: 40px; place-items: center; border-radius: 50%; background: #e7edf6; color: #425b80; font-weight: 700; font-variant-numeric: tabular-nums; }
+.spotmate-steps li[aria-current="step"] .spotmate-step-number { background: #1269c7; color: #ffffff; }
+.spotmate-steps strong { display: block; font-size: 15px; }
+.spotmate-steps div > span { display: block; margin-top: 2px; color: var(--spotmate-subtext); font-size: 14px; }
+.spotmate-steps li:not(:last-child)::after { position: absolute; content: ""; right: -20px; width: 16px; height: 2px; background: #cbd9ee; }
+.spotmate-panel-toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 
 .spotmate-button,
 .spotmate-voluntary-panel button,
@@ -48,214 +59,76 @@
   justify-content: center;
   min-height: 44px;
   min-width: 44px;
-  padding: 0.5rem 1rem;
-  border-radius: 500px;
-  border: none;
-  font-size: 0.875rem;
-  font-weight: 700;
-  cursor: pointer;
-  background-color: var(--spotmate-accent);
-  color: #000000;
-  transition: transform 0.1s ease, background-color 0.1s ease;
-  box-sizing: border-box;
+  padding: 10px 20px;
+  border: 1px solid #1269c7;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #0855a6;
+  font: 600 15px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   text-align: center;
+  cursor: pointer;
+  transition: background-color 120ms ease-out;
 }
-
-.spotmate-button:hover:not(:disabled),
-.spotmate-voluntary-panel button:hover:not(:disabled),
-.spotmate-download-panel button:hover:not(:disabled) {
-  background-color: var(--spotmate-accent-hover);
-  transform: scale(1.02);
-}
-
-.spotmate-button:disabled,
+.spotmate-voluntary-panel button:hover:not(:disabled):not([aria-disabled="true"]),
+.spotmate-download-panel button:hover:not(:disabled) { background: #eaf2ff; }
+.spotmate-voluntary-panel button[aria-disabled="true"],
 .spotmate-voluntary-panel button:disabled,
-.spotmate-download-panel button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.spotmate-button-cancel {
-  background-color: var(--spotmate-danger);
-  color: #ffffff;
-}
-
-.spotmate-button-cancel:hover:not(:disabled) {
-  background-color: #f13c4e;
-}
-
-.spotmate-button-select-all,
-.spotmate-button-select-none {
-  background-color: #333333;
-  color: var(--spotmate-text);
-  border: 1px solid #555555;
-}
-
-.spotmate-button-select-all:hover:not(:disabled),
-.spotmate-button-select-none:hover:not(:disabled) {
-  background-color: #444444;
-}
-
-.spotmate-button:focus-visible,
+.spotmate-download-panel button:disabled { opacity: 0.55; cursor: not-allowed; }
 .spotmate-voluntary-panel button:focus-visible,
 .spotmate-download-panel button:focus-visible,
-.spotmate-checkbox-container input[type="checkbox"]:focus-visible {
-  outline: 2px solid var(--spotmate-focus-ring);
-  outline-offset: 2px;
-}
-
-.spotmate-track-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 100%;
-}
+.spotmate-product-header a:focus-visible,
+#spotmate-source-url:focus-visible,
+.spotmate-checkbox-container input:focus-visible { outline: 3px solid #1269c7; outline-offset: 3px; }
+.spotmate-product-header a:focus-visible { outline-color: #ffffff; }
+.spotmate-status { margin: 16px 0 0; }
+.spotmate-status:empty { margin: 0; }
+.spotmate-voluntary-panel ::selection,
+.spotmate-download-panel ::selection { background: #cee2ff; color: #12213f; }
+.spotmate-results-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 12px; padding: 20px 24px 12px; }
+.spotmate-results-heading h2 { margin: 0; color: inherit; font: 700 21px/1.3 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.spotmate-results-heading p { margin: 0; color: var(--spotmate-subtext); font-variant-numeric: tabular-nums; }
+.spotmate-results-list { list-style: none; margin: 0; padding: 0 24px; }
+.spotmate-result-row { display: grid; grid-template-columns: 24px minmax(90px, 1fr) minmax(80px, 0.8fr) minmax(160px, 2fr) auto; align-items: center; gap: 16px; min-height: 82px; padding: 16px 0; border-top: 1px solid #e3ebf6; }
+.spotmate-result-row strong { font-size: 17px; }
+.spotmate-result-row p { margin: 0; color: var(--spotmate-subtext); font-size: 14px; }
+.spotmate-result-number { color: #4b607f; font-variant-numeric: tabular-nums; }
+.spotmate-result-state { font-weight: 600; }
+.spotmate-ready { color: #167449; }
+.spotmate-failed { color: #945600; }
+.spotmate-download-footer { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; margin-top: 8px; padding: 20px 24px; border-radius: 0 0 11px 11px; background: #eaf2ff; }
+.spotmate-download-footer button { background: #1269c7; color: #ffffff; font-size: 16px; }
+.spotmate-download-footer button:hover:not(:disabled) { background: #0855a6; }
+.spotmate-download-footer p { margin: 0; color: #244a7e; }
 
 /* Desktop layout (>= 768px) */
-.spotmate-track-row {
-  display: grid;
-  grid-template-columns: 44px minmax(120px, 2fr) minmax(100px, 1fr) minmax(120px, 1.5fr) auto;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.5rem 0.75rem;
-  background-color: var(--spotmate-row-bg);
-  border-radius: 4px;
-  border: 1px solid var(--spotmate-border);
-  box-sizing: border-box;
-}
-
-.spotmate-track-row:hover {
-  background-color: var(--spotmate-row-hover);
-}
-
-.spotmate-checkbox-container {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  min-width: 44px;
-  cursor: pointer;
-}
-
-.spotmate-checkbox-container input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  accent-color: var(--spotmate-accent);
-}
-
-.spotmate-track-name {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--spotmate-text);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.spotmate-track-status {
-  font-size: 0.8125rem;
-  color: var(--spotmate-subtext);
-}
-
-.spotmate-track-status[data-status="success"] {
-  color: var(--spotmate-accent);
-  font-weight: 600;
-}
-
-.spotmate-track-status[data-status="failed"] {
-  color: var(--spotmate-danger);
-  font-weight: 600;
-}
-
-.spotmate-track-row progress {
-  width: 100%;
-  height: 8px;
-  border-radius: 4px;
-  overflow: hidden;
-  appearance: none;
-  border: none;
-  background-color: #333333;
-}
-
-.spotmate-track-row progress::-webkit-progress-bar {
-  background-color: #333333;
-  border-radius: 4px;
-}
-
-.spotmate-track-row progress::-webkit-progress-value {
-  background-color: var(--spotmate-accent);
-  border-radius: 4px;
-}
-
-.spotmate-track-row progress::-moz-progress-bar {
-  background-color: var(--spotmate-accent);
-  border-radius: 4px;
-}
-
-.spotmate-live-region {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
+.spotmate-track-list { display: flex; flex-direction: column; gap: 8px; }
+.spotmate-track-row { display: grid; grid-template-columns: 44px minmax(120px, 2fr) minmax(100px, 1fr) minmax(120px, 1.5fr) auto; align-items: center; gap: 16px; padding: 12px; }
+.spotmate-checkbox-container { display: inline-flex; min-height: 44px; min-width: 44px; align-items: center; justify-content: center; }
+.spotmate-checkbox-container input { accent-color: #1269c7; }
+.spotmate-track-name { overflow-wrap: anywhere; }
+.spotmate-track-status { color: var(--spotmate-subtext); }
+.spotmate-track-row progress { width: 100%; accent-color: #1269c7; }
+.spotmate-live-region { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* Mobile responsive layout (< 768px) */
 @media (max-width: 767px) {
-  .spotmate-voluntary-panel,
-  .spotmate-download-panel {
-    padding: 0.75rem;
-    gap: 0.75rem;
-  }
-
-  .spotmate-panel-toolbar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .spotmate-button,
-  .spotmate-voluntary-panel button,
-  .spotmate-download-panel button {
-    width: 100%;
-  }
-
-  .spotmate-track-row {
-    display: grid;
-    grid-template-columns: 44px 1fr;
-    grid-template-rows: auto auto auto;
-    gap: 0.5rem;
-    padding: 0.75rem;
-  }
-
-  .spotmate-checkbox-container {
-    grid-row: 1 / span 3;
-    grid-column: 1;
-    align-self: center;
-  }
-
-  .spotmate-track-name {
-    grid-column: 2;
-    grid-row: 1;
-  }
-
-  .spotmate-track-status {
-    grid-column: 2;
-    grid-row: 2;
-  }
-
-  .spotmate-track-row progress {
-    grid-column: 2;
-    grid-row: 3;
-  }
-
-  .spotmate-track-row .spotmate-button {
-    grid-column: 2;
-    margin-top: 0.5rem;
-  }
+  .spotmate-product-header { padding: 16px; gap: 8px 12px; }
+  .spotmate-product-header h2 { font-size: 22px; }
+  .spotmate-product-header span { font-size: 14px; }
+  .spotmate-workspace { padding: 16px; }
+  .spotmate-steps { grid-template-columns: 1fr; gap: 16px; margin: 20px 0; }
+  .spotmate-steps li:not(:last-child)::after { left: 19px; right: auto; bottom: -14px; width: 2px; height: 12px; }
+  .spotmate-panel-toolbar { flex-direction: column; align-items: stretch; }
+  .spotmate-panel-toolbar button { width: 100%; }
+  .spotmate-results-heading { padding: 16px; }
+  .spotmate-results-list { padding: 0 16px; }
+  .spotmate-result-row { grid-template-columns: 20px minmax(0, 1fr) auto; gap: 8px 12px; }
+  .spotmate-result-row p { grid-column: 2 / -1; }
+  .spotmate-result-row button { grid-column: 2 / -1; justify-self: start; }
+  .spotmate-download-footer { padding: 16px; gap: 12px; }
+  .spotmate-download-footer button { width: 100%; }
+  .spotmate-track-row { grid-template-columns: 44px minmax(0, 1fr); gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spotmate-voluntary-panel button, .spotmate-download-panel button { transition: none; }
 }
