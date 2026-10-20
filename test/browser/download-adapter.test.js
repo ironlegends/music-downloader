@@ -66,6 +66,26 @@ function runtime(exposeLegacyGlobals = false) {
   return { ...dom, adapter, windowRef, delays };
 }
 
+test('integrated results expose safe states and count only trusted requests that were started', () => {
+  const env = createDom();
+  const rows = [], requests = [];
+  const adapter = createDownloadAdapter({
+    ...env, windowRef: { URL, setTimeout, clearTimeout }, guided: true,
+    onResults: value => rows.push(value), onRequest: id => requests.push(id)
+  });
+  adapter.render([{ id: 'one', kind: 'success', url: ['https:', '', 'example.invalid', 'result'].join('/') }]);
+  assert.deepEqual(rows.at(-1), [{ id: 'one', position: 1, status: 'ready' }]);
+  assert.equal(env.body.children.length, 0, 'The integrated view owns result markup.');
+  adapter.downloadById('one', { isTrusted: false });
+  adapter.downloadById('absent', { isTrusted: true });
+  assert.deepEqual(requests, []);
+  adapter.downloadById('one', { isTrusted: true });
+  assert.deepEqual(requests, ['one']);
+  assert.equal(env.anchors.length, 1);
+  adapter.clear();
+  assert.deepEqual(rows.at(-1), []);
+});
+
 test('render filters to HTTPS successes, remains voluntary, and removes a stale panel', () => {
   const env = runtime(false);
   const first = env.adapter.render([

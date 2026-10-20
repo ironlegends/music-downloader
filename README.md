@@ -2,6 +2,10 @@
 
 Convert Spotify links and download music through SpotMate, with controls for each track or the whole playlist.
 
+![Music Downloader's centered workspace with moving artwork and clear track states](docs/images/workspace.png)
+
+Example interface with sample tracks and original fictional artwork.
+
 ## Install in Chrome
 
 1. [Download the extension source ZIP](https://github.com/ironlegends/music-downloader/archive/refs/heads/main.zip).
@@ -20,6 +24,9 @@ No terminal, Node.js or build step is needed. Keep the folder in place while the
 
 Keep the SpotMate tab open while conversions run. Chrome may ask you to allow multiple downloads for this site.
 The panel shows what is happening and explains how to recover from errors. Use **Cancel** to stop loading or converting.
+Use **Open SpotMate form** to reach the site's original form and manual verification. Choose **Pause motion** to stop the animated background; reduced motion is respected automatically.
+
+Track names and covers appear when available from the page. Missing artwork uses a record tile. Download feedback counts requests started; check Chrome for the saved files.
 
 ## Help
 
@@ -42,9 +49,11 @@ Use Node.js 22 or 24 and npm for development. There are no npm dependencies to i
 ~~~sh
 npm test
 npm run build:browser
+npm run build:extension
 ~~~
 
 The generated browser files are committed so users can load the extension directly. Keep `extension/manifest.json` identical to `extension/chrome/manifest.json`; tests verify their parity and referenced files.
+When changing `src/browser/panel.css`, synchronize `extension/assets/playlist-panel.css` and run both build commands. Tests check the source stylesheet, manifest stylesheet and embedded bundle styles for parity.
 
 Conversion and downloads require a trusted user click (`event.isTrusted`). Turnstile remains manual, and the extension starts no hidden or background downloads. SpotMate performs the conversions; this project runs no conversion server.
 

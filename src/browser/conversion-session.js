@@ -45,7 +45,8 @@ const createConversionSession = ({
   AbortControllerImpl,
   setTimeoutImpl,
   clearTimeoutImpl,
-  sleep
+  sleep,
+  onTrackUpdate
 } = {}) => {
   if (!pageAdapter || typeof pageAdapter.publishLegacyConversionResults !== 'function') {
     throw new TypeError('pageAdapter is required');
@@ -63,6 +64,10 @@ const createConversionSession = ({
     ? sleep
     : createAbortableSleep(setTimeoutImpl, clearTimeoutImpl);
   let activeController = null;
+  const notify = (track, state) => {
+    // Optional visual feedback must never alter conversion or cancellation behavior.
+    try { onTrackUpdate?.(track?.id, state); } catch { /* The view may have been detached. */ }
+  };
 
   const cancel = () => {
     activeController?.abort();
@@ -84,6 +89,7 @@ const createConversionSession = ({
       const safeResult = result && typeof result === 'object' ? result : schemaResult();
       results.push(safeResult);
       decisions.push({ track, result: safeResult });
+      notify(track, safeResult.kind === 'success' ? 'ready' : safeResult.status === 'cancelled' ? 'canceled' : 'failed');
     };
     try {
       for (let index = 0; index < tracks.length; index += 1) {
@@ -104,12 +110,14 @@ const createConversionSession = ({
           continue;
         }
         try {
+          notify(track, 'converting');
           let result = await apiAdapter.convertTrack(track, operationController.signal);
           if (operationController.signal.aborted) {
             append(track, cancelledResult());
             break;
           }
           if (result?.kind === 'poll') {
+            notify(track, 'polling');
             result = await apiAdapter.pollTask(result.taskId, operationController.signal);
             if (operationController.signal.aborted) {
               append(track, cancelledResult());

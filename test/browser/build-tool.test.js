@@ -29,6 +29,12 @@ test('build-tool: checkBrowserArtifacts validates generated files on disk', () =
   assert.equal(result, true);
 });
 
+test('build-tool: the manifest stylesheet matches the shared source stylesheet', () => {
+  const source = fs.readFileSync(path.join(rootDir, 'src/browser/panel.css'), 'utf8');
+  const manifestStyle = fs.readFileSync(path.join(rootDir, 'extension/assets/playlist-panel.css'), 'utf8');
+  assert.ok(normalizeLF(source) === normalizeLF(manifestStyle), 'Synchronize the manifest stylesheet with src/browser/panel.css');
+});
+
 test('build-tool: the loadable extension bundle stays synchronized with source and embedded styles', () => {
   const actual = fs.readFileSync(path.join(rootDir, 'extension/content-script.js'), 'utf8');
   const expected = generateBundle('extension/content-script.js', rootDir);

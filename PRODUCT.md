@@ -34,11 +34,11 @@ The extension runs on https://spotmate.online/en1 and its trailing-slash equival
 
 ## Brand Commitments
 
-Product name: Music Downloader. Public repository: ironlegends/music-downloader. The user approved option A, the light blue guided interface, on October 19, 2026. See DESIGN.md for the implementation contract.
+Product name: Music Downloader. Public repository: ironlegends/music-downloader. The user approved the centered smoked olive workspace, small drifting covers and responsive ambient motion on October 20, 2026. This replaces the earlier light blue direction. See DESIGN.md for the implementation contract.
 
 ## Evidence on Hand
 
-Existing source and README, 198 passing local tests, and synthetic Windows Chromium extension captures at desktop and narrow widths. These do not establish real SpotMate, macOS or Safari runtime validation.
+Shared source and generated browser outputs, focused regression tests, and synthetic Windows Chromium captures at desktop and narrow widths. The integrated browser proof is recorded in qa/living-workspace-2026-10-20.json. These do not establish real SpotMate, macOS or Safari runtime validation.
 
 ## Product Principles
 

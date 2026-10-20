@@ -79,13 +79,16 @@ const createBrowserCore = ({
     exposeLegacyGlobals: exposeConversionGlobals,
     AbortControllerImpl,
     setTimeoutImpl,
-    clearTimeoutImpl
+    clearTimeoutImpl,
+    onTrackUpdate: (id, state) => view?.setTrackState?.(id, state)
   });
   const downloadAdapter = createDownloadAdapter({
     documentRef,
     windowRef,
     guided: true,
-    exposeLegacyGlobals: exposeDownloadGlobals
+    exposeLegacyGlobals: exposeDownloadGlobals,
+    onResults: results => view?.setResults?.(results),
+    onRequest: id => view?.noteDownloadRequest?.(id)
   });
 
   let view = null;
@@ -109,11 +112,13 @@ const createBrowserCore = ({
     loadController = new AbortControllerImpl();
     try {
       downloadAdapter.clear();
+      view?.setTracks?.([]);
       view?.setActivity?.('loading');
       view?.setStatus?.("Loading tracks. Complete the site's verification if asked, or cancel to try another link.");
       const input = documentRef.querySelector?.('#trackUrl');
       const previousInputs = pageAdapter.submitExistingSpotifyForm(view?.getSourceUrl?.() ?? input?.value);
       const tracks = await pageAdapter.waitForTrackInputs(loadController.signal, previousInputs);
+      view?.setTracks?.(pageAdapter.collectTrackPresentation());
       view?.setStage?.('convert');
       view?.setStatus?.(`${tracks.length} ${tracks.length === 1 ? 'track is' : 'tracks are'} loaded. Choose Start conversions.`);
     } catch (error) {
@@ -139,6 +144,7 @@ const createBrowserCore = ({
         view?.setStatus?.('No tracks found. Paste a Spotify link and choose Load Spotify URL first.');
         return undefined;
       }
+      view?.setTracks?.(pageAdapter.collectTrackPresentation());
       downloadAdapter.clear();
       view?.setStatus?.(`Converting ${tracks.length} ${tracks.length === 1 ? 'track' : 'tracks'}. Keep this tab open.`);
       const results = await session.run(tracks);
@@ -194,10 +200,11 @@ const createBrowserCore = ({
 
   view = createPlaylistView({
     documentRef,
+    windowRef,
     onLoad,
     onStart,
     onCancel,
-    onDownloadTrack: (item, event) => downloadAdapter.downloadTrack(item, event),
+    onDownloadTrack: (id, event) => downloadAdapter.downloadById(id, event),
     onDownloadAll: (event) => downloadAdapter.downloadAll(event)
   });
 

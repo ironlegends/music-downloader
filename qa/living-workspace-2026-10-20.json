@@ -1,0 +1,64 @@
+{
+  "browser": "151.0.7922.34",
+  "platform": "win32",
+  "classification": "Browser plugin not available; isolated bundled Playwright used. The in-app browser is used separately for delivery.",
+  "artifact": "Built extension content-script.js; final mount return assigned to a fixture variable for lifecycle assertions",
+  "conversionRequests": 4,
+  "downloadRequestsStarted": 3,
+  "sizes": [
+    320,
+    390,
+    681,
+    768,
+    1440
+  ],
+  "columns": {
+    "h": [
+      390,
+      872,
+      989
+    ],
+    "rows": [
+      [
+        390,
+        872,
+        989
+      ],
+      [
+        390,
+        872,
+        989
+      ],
+      [
+        390,
+        872,
+        989
+      ],
+      [
+        390,
+        872,
+        989
+      ]
+    ]
+  },
+  "pageErrors": [],
+  "unexpectedRequests": [],
+  "checks": [
+    "real bundle renders",
+    "trusted loading uses original form",
+    "metadata and artwork fallback",
+    "20 moving covers",
+    "independent ambient motion",
+    "pointer/click response",
+    "actual conversion states and mixed results",
+    "aligned columns",
+    "trusted download requests only",
+    "all-motion pause",
+    "320-1440px layout",
+    "original form access and identity",
+    "remount replaces motion controller",
+    "teardown removes field",
+    "reduced motion"
+  ],
+  "scope": "Synthetic route-intercepted Chromium on Windows. No live service or music files requested. No macOS/Safari runtime proof."
+}

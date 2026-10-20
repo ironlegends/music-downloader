@@ -10,6 +10,9 @@ const ALLOWED_OUTPUTS = Object.freeze([
 
 const MODULE_ORDER = Object.freeze([
   'policy.js',
+  'track-presentation.js',
+  'motion-backdrop.js',
+  'living-workspace.js',
   'payload-parser.js',
   'spotmate-page-adapter.js',
   'spotmate-api-adapter.js',

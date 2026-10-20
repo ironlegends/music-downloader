@@ -1,4 +1,5 @@
 import { BROWSER_LIMITS, isAllowedSpotmatePage } from './policy.js';
+import { readTrackPresentation } from './track-presentation.js';
 
 const fail = (code) => {
   throw new Error(code);
@@ -57,6 +58,15 @@ const createSpotmatePageAdapter = ({
   const collectTrackInputs = () => {
     assertAllowed(windowRef);
     return readTrackInputs(documentRef);
+  };
+
+  const collectTrackPresentation = () => {
+    const tracks = collectTrackInputs();
+    const inputs = Array.from(documentRef.querySelector?.('#tracks')?.querySelectorAll?.('input[type="hidden"]') || []);
+    return tracks.map((track, index) => {
+      const input = inputs.find(node => (node.name || node.id) === track.id);
+      return { id: track.id, ...readTrackPresentation(input, index + 1, windowRef.URL) };
+    });
   };
 
   const readCsrfToken = () => {
@@ -134,6 +144,7 @@ const createSpotmatePageAdapter = ({
 
   const adapter = {
     collectTrackInputs,
+    collectTrackPresentation,
     readCsrfToken,
     submitExistingSpotifyForm,
     waitForTrackInputs,
