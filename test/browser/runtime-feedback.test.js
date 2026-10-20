@@ -72,6 +72,15 @@ function response({ ok = true, status = 200 } = {}) {
   return { ok, status, headers: { get: () => 'application/json' }, json: async () => ({ url: 'https://example.invalid/ready' }) };
 }
 
+test('bulk download feedback restores the accessible action state after requests finish', async () => {
+  const env = environment({ inputs: [{ name: 'one', value: 'https://open.spotify.com/track/one' }] });
+  await env.button('Start conversions').dispatch();
+  await env.button('Download all ready').dispatch();
+  assert.equal(env.button('Download all ready').disabled, false);
+  assert.equal(env.button('Download all ready').getAttribute('aria-disabled'), 'false');
+  assert.match(env.runtime.view.status, /1 download request started/);
+});
+
 const track = { name: 'sample-track', value: 'https://open.spotify.com/track/demo' };
 const allText = (node) => [node.textContent, ...node.children.map(allText)].join(' ');
 

@@ -21,6 +21,28 @@ function sessionDeps(overrides = {}) {
   };
 }
 
+test('workflow feedback follows real conversion and polling decisions without exposing URLs', async () => {
+  const updates = [];
+  const session = createConversionSession(sessionDeps({
+    onTrackUpdate: (id, state) => updates.push([id, state]),
+    apiAdapter: {
+      async convertTrack() { return { kind: 'poll', taskId: 'task-1' }; },
+      async pollTask() { return { kind: 'success', url: ['https:', '', 'example.invalid', 'result'].join('/') }; }
+    }
+  }));
+  await session.run([{ id: 'one', value: 'one' }]);
+  assert.deepEqual(updates, [['one', 'converting'], ['one', 'polling'], ['one', 'ready']]);
+});
+
+test('a failed visual feedback callback cannot interrupt conversion or lose its result', async () => {
+  const session = createConversionSession(sessionDeps({
+    onTrackUpdate() { throw new Error('detached-view'); },
+    apiAdapter: { async convertTrack() { return { kind: 'terminal', status: 500, error: 'http-non-ok' }; } }
+  }));
+  const results = await session.run([{ id: 'one', value: 'one' }]);
+  assert.equal(results[0].status, 500);
+});
+
 test('run converts tracks in order, one at a time, with 2000 ms between starts', async () => {
   const starts = [];
   const sleeps = [];

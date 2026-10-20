@@ -4,6 +4,10 @@ Notable changes to Music Downloader are recorded here. Version 2.0.0 is the publ
 
 ## [Unreleased]
 
+- Integrated the approved centered smoked olive workspace with small drifting covers, responsive ambient light, flowing lines and an activity trace tied to real workflow states. Pause, reduced motion, hidden/offscreen suspension and disposal cover all persistent motion.
+- Added optional page-derived titles/artists and strictly scoped existing Spotify CDN artwork, with record-tile fallbacks. Kept the original SpotMate form and manual verification accessible, added per-track conversion feedback and counted download requests without claiming saved files.
+- Kept track headings and mixed-result rows in a shared scroll viewport, and added source/manifest stylesheet parity and motion-lifecycle regression coverage.
+
 - Fixed result-column alignment when ready tracks and failed or unstarted tracks appear together. Documented the Chrome Web Store eligibility review and publication requirements.
 - Adopted the approved light blue guided design with a labeled source field, a three-stage workflow, complete result rows and a single primary download action. New links wait for fresh site results, and an in-progress download batch keeps its original items.
 - Added first-use guidance, visible loading and conversion states, actionable English errors and keyboard focus preservation to the active panel. Prevented overlapping load/conversion commands and removed the premature duplicate download control.

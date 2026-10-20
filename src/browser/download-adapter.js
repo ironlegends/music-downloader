@@ -2,7 +2,7 @@ import { BROWSER_LIMITS, isFinalHttpsUrl, isTrustedUserEvent } from './policy.js
 
 const PANEL_ID = 'spotmate-download-panel';
 
-const createDownloadAdapter = ({ documentRef, windowRef, exposeLegacyGlobals = false, guided = false } = {}) => {
+const createDownloadAdapter = ({ documentRef, windowRef, exposeLegacyGlobals = false, guided = false, onResults = null, onRequest = null } = {}) => {
   if (!documentRef || typeof documentRef.createElement !== 'function' || !documentRef.body) {
     throw new TypeError('documentRef is required');
   }
@@ -16,12 +16,13 @@ const createDownloadAdapter = ({ documentRef, windowRef, exposeLegacyGlobals = f
   let items = [];
 
   const clear = () => {
-    const existing = documentRef.getElementById?.(PANEL_ID)
+    const existing = typeof onResults === 'function' ? null : documentRef.getElementById?.(PANEL_ID)
       ?? documentRef.querySelector?.('#' + PANEL_ID);
     existing?.remove?.();
     panel?.remove?.();
     panel = null;
     items = [];
+    if (typeof onResults === 'function') onResults([]);
     if (exposeLegacyGlobals) delete windowRef.downloadUrls;
   };
 
@@ -36,6 +37,7 @@ const createDownloadAdapter = ({ documentRef, windowRef, exposeLegacyGlobals = f
     anchor.target = '_blank';
     anchor.rel = 'noopener noreferrer';
     anchor.click();
+    if (typeof onRequest === 'function') onRequest(item.id);
   };
 
   const downloadTrack = (item, event) => {
@@ -72,6 +74,14 @@ const createDownloadAdapter = ({ documentRef, windowRef, exposeLegacyGlobals = f
       }
     }
     items = successful;
+    if (typeof onResults === 'function') {
+      onResults(rows.map(row => ({
+        id: row.item?.id ?? (typeof results[row.position - 1]?.id === 'string' ? results[row.position - 1].id : `track-${row.position}`),
+        position: row.position,
+        status: row.item ? 'ready' : row.canceled ? 'canceled' : row.notStarted ? 'not_started' : 'failed'
+      })));
+      return items.length;
+    }
     if (guided) {
       if (rows.length === 0) return 0;
       panel = documentRef.createElement('section');
@@ -178,7 +188,8 @@ const createDownloadAdapter = ({ documentRef, windowRef, exposeLegacyGlobals = f
     return successful.length;
   };
 
-  const adapter = { clear, render, downloadTrack, downloadAll };
+  const downloadById = (id, event) => downloadTrack(items.find(item => item.id === id), event);
+  const adapter = { clear, render, downloadTrack, downloadById, downloadAll };
   Object.defineProperty(adapter, 'panel', { enumerable: true, get: () => panel });
   return Object.freeze(adapter);
 };
